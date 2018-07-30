@@ -31,11 +31,15 @@ public class Initializer implements ServletContextListener {
 
         //setting up a new product category
         ProductCategory tablet = new ProductCategory("Tablet", "Hardware", "A tablet computer, commonly shortened to tablet, is a thin, flat mobile computer with a touchscreen display.");
+        ProductCategory tv = new ProductCategory("tv", "Hardware", "A box which gives you the impression of actually seeing inside things.");
         productCategoryDataStore.add(tablet);
+        productCategoryDataStore.add(tv);
 
         //setting up products and printing it
         productDataStore.add(new Product("Amazon Fire", 49.9f, "USD", "Fantastic price. Large content ecosystem. Good parental controls. Helpful technical support.", tablet, amazon));
         productDataStore.add(new Product("Lenovo IdeaPad Miix 700", 479, "USD", "Keyboard cover is included. Fanless Core m5 processor. Full-size USB ports. Adjustable kickstand.", tablet, lenovo));
         productDataStore.add(new Product("Amazon Fire HD 8", 89, "USD", "Amazon's latest Fire HD 8 tablet is a great value for media consumption.", tablet, amazon));
+        productDataStore.add(new Product("Amazon tv", 2000, "USD", "Great Amazon tv.", tv, amazon));
+        productDataStore.add(new Product("Lenovo tv", 2300, "USD", "Best Lenovo tv.", tv, lenovo));
     }
 }
