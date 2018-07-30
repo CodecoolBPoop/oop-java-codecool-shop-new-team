@@ -25,16 +25,23 @@ public class ProductController extends HttpServlet {
         ProductDao productDataStore = ProductDaoMem.getInstance();
         ProductCategoryDao productCategoryDataStore = ProductCategoryDaoMem.getInstance();
 
-//        Map params = new HashMap<>();
-//        params.put("category", productCategoryDataStore.find(1));
-//        params.put("products", productDataStore.getBy(productCategoryDataStore.find(1)));
+        String categoryID = req.getParameter("dropdown");
+        if (categoryID == null){
+            categoryID = "1";
+        }
+        System.out.println(categoryID);
+        Integer parsedId = Integer.parseInt(categoryID);
+ //       Map params = new HashMap<>();
+   //     params.put("category", productCategoryDataStore.find(1));
+     //   params.put("products", productDataStore.getBy(productCategoryDataStore.find(1)));
 
         TemplateEngine engine = TemplateEngineUtil.getTemplateEngine(req.getServletContext());
         WebContext context = new WebContext(req, resp, req.getServletContext());
 //        context.setVariables(params);
         context.setVariable("recipient", "World");
-        context.setVariable("category", productCategoryDataStore.find(1));
-        context.setVariable("products", productDataStore.getBy(productCategoryDataStore.find(1)));
+        context.setVariable("category", productCategoryDataStore.find(parsedId));
+        context.setVariable("categories", productCategoryDataStore.getAll());
+        context.setVariable("products", productDataStore.getBy(productCategoryDataStore.find(parsedId)));
         engine.process("product/index.html", context, resp.getWriter());
     }
 

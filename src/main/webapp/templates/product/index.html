@@ -35,7 +35,15 @@
 
 <div class="container">
     <div class="well well-sm">
-        <strong th:text="${category.name}">Category Title</strong>
+        <form action="index.html" method="get">
+            <select name="dropdown" id="dropdown">
+                <div th:each="cat,iterStat : ${categories}">
+                    <option th:value="${cat.getId()}"><strong th:text="${cat.getName()}">Category Title</strong></option>
+                </div>
+            </select>
+            <button type="submit">submit choice</button>
+        </form>
+
     </div>
 
     <div id="products" class="row list-group">
