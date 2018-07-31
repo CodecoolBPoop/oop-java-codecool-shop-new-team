@@ -60,3 +60,18 @@
 {
     margin: 0 0 11px;
 }
+
+form {
+    /* Float both forms to the left */
+    float: left;
+    margin-right: 30px;
+    top: 50%
+}
+
+.cart {
+    float: right;
+}
+
+.fa-shopping-cart {
+    font-size: 3em;
+}
