@@ -44,6 +44,14 @@
             <button type="submit">submit choice</button>
         </form>
 
+        <form action="index.html" method="get">
+            <select name="dropdown2" id="dropdown2">
+                <div th:each="cat,iterStat : ${supplier}">
+                    <option th:value="${cat.getId()}"><strong th:text="${cat.getName()}">Category Title</strong></option>
+                </div>
+            </select>
+            <button type="submit">submit choice</button>
+        </form>
     </div>
 
     <div id="products" class="row list-group">
