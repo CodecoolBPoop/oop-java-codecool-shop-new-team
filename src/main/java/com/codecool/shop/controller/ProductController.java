@@ -20,7 +20,8 @@ import java.util.Map;
 
 @WebServlet(urlPatterns = {"/"})
 public class ProductController extends HttpServlet {
-
+    private boolean supplierButton;
+    private boolean cathegoryButton;
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         ProductDao productDataStore = ProductDaoMem.getInstance();
@@ -29,13 +30,19 @@ public class ProductController extends HttpServlet {
 
         String supplierID = req.getParameter("dropdown2");
         String categoryID = req.getParameter("dropdown");
+
         if (categoryID == null){
             categoryID = "1";
+            cathegoryButton = false;
+        }else{
+            cathegoryButton = true;
         }
         if (supplierID==null){
             supplierID = "1";
+            supplierButton = false;
+        }else {
+            supplierButton = true;
         }
-        System.out.println(categoryID);
         Integer parsedId = Integer.parseInt(categoryID);
         Integer parsedSupplierId = Integer.parseInt(supplierID);
  //       Map params = new HashMap<>();
@@ -48,9 +55,14 @@ public class ProductController extends HttpServlet {
         context.setVariable("recipient", "World");
         context.setVariable("category", productCategoryDataStore.find(parsedId));
         context.setVariable("categories", productCategoryDataStore.getAll());
-        context.setVariable("products", productDataStore.getBy(productCategoryDataStore.find(parsedId)));
         context.setVariable("supplier", supplierDaoMem.getAll());
-        context.setVariable("products", productDataStore.getBy(supplierDaoMem.find(parsedSupplierId)));
+        context.setVariable("products", productDataStore.getBy(productCategoryDataStore.find(1)));
+        if (cathegoryButton==true) {
+            context.setVariable("products", productDataStore.getBy(productCategoryDataStore.find(parsedId)));
+        }
+        if(supplierButton==true){
+            context.setVariable("products", productDataStore.getBy(supplierDaoMem.find(parsedSupplierId)));
+        }
         engine.process("product/index.html", context, resp.getWriter());
     }
 
