@@ -6,8 +6,8 @@ import com.codecool.shop.dao.implementation.CartItems;
 import com.codecool.shop.dao.implementation.ProductCategoryDaoMem;
 import com.codecool.shop.dao.implementation.ProductDaoMem;
 import com.codecool.shop.config.TemplateEngineUtil;
-import com.codecool.shop.model.Product;
 import com.codecool.shop.dao.implementation.SupplierDaoMem;
+import com.codecool.shop.model.OrderItem;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.WebContext;
 
@@ -17,14 +17,11 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
 
 @WebServlet(urlPatterns = {"/"})
 public class ProductController extends HttpServlet {
     private boolean supplierButton;
-    private boolean cathegoryButton;
+    private boolean categoryButton;
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         ProductDao productDataStore = ProductDaoMem.getInstance();
@@ -37,9 +34,9 @@ public class ProductController extends HttpServlet {
 
         if (categoryID == null){
             categoryID = "1";
-            cathegoryButton = false;
+            categoryButton = false;
         }else{
-            cathegoryButton = true;
+            categoryButton = true;
         }
         if (supplierID==null){
             supplierID = "1";
@@ -51,13 +48,9 @@ public class ProductController extends HttpServlet {
 
         String cartProductId = req.getParameter("cart_item_id");
         if (cartProductId != null) {
-            System.out.println(cartProductId);
             Integer cartProductIdInt = Integer.parseInt(cartProductId);
             cartItems.add(cartProductIdInt);
-            System.out.println(cartItems.getAll());
-            System.out.println(cartItems.getAll().get(0).getQuantity());
         }
-
         //Map params = new HashMap<>();
         //params.put("category", productCategoryDataStore.find(1));
         //params.put("products", productDataStore.getBy(productCategoryDataStore.find(1)));
@@ -71,14 +64,13 @@ public class ProductController extends HttpServlet {
         context.setVariable("categories", productCategoryDataStore.getAll());
         context.setVariable("supplier", supplierDaoMem.getAll());
         context.setVariable("products", productDataStore.getBy(productCategoryDataStore.find(1)));
-        if (cathegoryButton==true) {
+        if (categoryButton ==true) {
             context.setVariable("products", productDataStore.getBy(productCategoryDataStore.find(parsedId)));
         }
-        if(supplierButton==true){
+        if (supplierButton==true){
             context.setVariable("products", productDataStore.getBy(supplierDaoMem.find(parsedSupplierId)));
         }
-        context.setVariable("products", productDataStore.getBy(productCategoryDataStore.find(parsedId)));
-
+        context.setVariable("cartSize", OrderItem.totalItems);
         engine.process("product/index.html", context, resp.getWriter());
     }
 
