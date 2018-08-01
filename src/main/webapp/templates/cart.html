@@ -37,13 +37,22 @@
     <div class="well well-sm">
         <table>
             <th>
-                <td>Item name</td>
-                <td>Quantity</td>
-                <td>Price</td>
+                <tr>
+                    <td>Item name</td>
+                    <td>Quantity</td>
+                    <td>Price</td>
+                </tr>
             </th>
+            <tbody th:each="cartItem,iterStat : ${cartItems}">
+                <tr>
+                    <td th:text="${cartItem.getName()}">Item Name</td>
+                    <td th:text="${cartItem.getQuantity()}">Quantity</td>
+                    <td th:text="${cartItem.getPrice()} + ${cartItem.getCurrency()}">Price</td>
+                </tr>
+            </tbody>
         </table>
     </div>
-
+    <h4 th:text="${totalPrice}">Total Price</h4>
 </div>
 
 <div th:replace="footer.html :: copy"></div>
