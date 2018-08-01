@@ -5,6 +5,7 @@
     <meta name="author" content="Codecool" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
 
+
     <title>Codecool Shop</title>
 
     <!-- Latest compiled and minified Jquery -->
@@ -25,6 +26,8 @@
             crossorigin="anonymous"></script>
 
     <link rel="stylesheet" type="text/css" href="/static/css/custom.css" />
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.2.0/css/all.css"
+          integrity="sha384-hWVjflwFxL6sNzntih27bfxkr27PmbbK/iSvJ+a4+0owXq79v+lsFkW54bOGbiDQ" crossorigin="anonymous">
 </head>
 
 <body>
@@ -34,7 +37,7 @@
 </div>
 
 <div class="container">
-    <div class="well well-sm">
+    <div class="well well-lg">
         <form action="index.html" method="get">
             <select name="dropdown" id="dropdown">
                 <div th:each="cat,iterStat : ${categories}">
@@ -46,12 +49,19 @@
 
         <form action="index.html" method="get">
             <select name="dropdown2" id="dropdown2">
-                <div th:each="cat,iterStat : ${supplier}">
-                    <option th:value="${cat.getId()}"><strong th:text="${cat.getName()}">Category Title</strong></option>
+                <div th:each="sup,iterStat : ${supplier}">
+                    <option th:value="${sup.getId()}"><strong th:text="${sup.getName()}">Supplier Title</strong></option>
                 </div>
             </select>
             <button type="submit">submit choice</button>
         </form>
+
+        <div class="cart">
+            <a href="#">
+                <i class="fas fa-shopping-cart"></i>
+                <span th:text="${cartSize}">Number of Items</span>
+            </a>
+        </div>
     </div>
 
     <div id="products" class="row list-group">
@@ -67,7 +77,7 @@
                             <p class="lead" th:text="${prod.getPrice()}">100 USD</p>
                         </div>
                         <div class="col-xs-12 col-md-6">
-                            <a class="btn btn-success" href="#">Add to cart</a>
+                            <a class="btn btn-success" th:href="@{/add_to_cart/product(cart_item_id=${prod.id})}">Add to cart</a>
                         </div>
                     </div>
                 </div>
