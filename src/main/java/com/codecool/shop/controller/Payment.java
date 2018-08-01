@@ -1,3 +1,4 @@
+
 package com.codecool.shop.controller;
 import com.codecool.shop.config.TemplateEngineUtil;
 import org.thymeleaf.TemplateEngine;
@@ -19,7 +20,7 @@ import java.io.IOException;
             WebContext context = new WebContext(req, resp, req.getServletContext());
 
             String amount = req.getParameter("dropdown2");
-            context.setVariable("cash","100");
+            context.setVariable("cash","9000000");
             engine.process("product/paypal.html", context, resp.getWriter());
         }
     }
