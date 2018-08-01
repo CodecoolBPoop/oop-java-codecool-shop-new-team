@@ -12,7 +12,7 @@ public class OrderItem {
     public static float totalPrice = 0;
 
     public static String getTotalPrice() {
-        return "Total value: " + String.valueOf(totalPrice) + " kUSD";
+        return "Total value: " + String.valueOf(totalPrice) + " USD";
     }
 
     public OrderItem(int id, String name, int quantity, float price, Currency currency) {
