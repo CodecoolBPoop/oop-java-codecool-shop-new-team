@@ -4,6 +4,8 @@ package com.codecool.shop.controller;
 import com.codecool.shop.config.TemplateEngineUtil;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.WebContext;
+import com.codecool.shop.model.OrderItem;
+
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -19,8 +21,6 @@ import java.util.Map;
 
 @WebServlet(urlPatterns = {"/payment"})
 public class Payment extends HttpServlet {
-
-
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -51,6 +51,9 @@ public class Payment extends HttpServlet {
 
         }
         System.out.println(parameterMap);
+
+        context.setVariable("cartSize", OrderItem.totalItems);
+
         context.setVariable("cash", "9000000");
         engine.process("product/paypal.html", context, resp.getWriter());
         final JFrame parent = new JFrame();
