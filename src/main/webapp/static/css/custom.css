@@ -13,6 +13,25 @@
 {
     margin-top: 10px;
 }
+
+#cart-num {
+    font-size: 2em;
+    color: red;
+}
+
+div.item.col-xs-4.col-lg-4 {
+    float: left;
+}
+
+div#products.row.list-group {
+    margin: 15px;
+    overflow: hidden;
+}
+
+div.container-fluid {
+    margin: 15px;
+}
+
 .item.list-group-item
 {
     float: none;
@@ -58,14 +77,23 @@
 }
 .list-group-item-text
 {
+    font-size: 14px;
     margin: 0 0 11px;
+}
+
+.list-group-item-heading{
+    font-size: 20px;
+}
+
+select .selector{
+    width: 200px;
+    display: none;
 }
 
 form {
     /* Float both forms to the left */
     float: left;
-    margin-right: 30px;
-    top: 50%
+    top: 50%;
 }
 
 .cart {
@@ -74,4 +102,37 @@ form {
 
 .fa-shopping-cart {
     font-size: 3em;
+}
+
+.cart {
+    float: right;
+}
+
+nav .brand {
+    font-size: 5em;
+}
+
+.container{
+    overflow: hidden;
+}
+
+div .filter {
+    border-style: ridge;
+    height: 80px;
+}
+
+div .col-sm-4 {
+    display         : flex;
+    justify-content : center;
+    align-items     : center;
+}
+
+select#dropdown.form-control.form-control-lg.selector{
+    width: 200px;
+    margin-right: 15px;
+}
+
+select#dropdown2.form-control.form-control-lg.selector{
+    width: 200px;
+    margin-right: 15px;
 }
