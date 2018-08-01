@@ -53,7 +53,7 @@ public class Initializer implements ServletContextListener {
         productDataStore.add(new Product("Amazon Fire HD 8", 89, "USD", "Amazon's latest Fire HD 8 tablet is a great value for media consumption.", tablet, amazon));
         productDataStore.add(new Product("Amazon tv", 2000, "USD", "Dolby Atmos is the same audio technology developed for state-of-the-art cinemas, .", tv, amazon));
 
-        productDataStore.add(new Product("Ipad", 89, "USD", "Amazon's latest Fire HD 8 tablet is a great value for media consumption.", tablet, apple));
+        productDataStore.add(new Product("Ipad", 889, "USD", "Latest Ipad ever created... Buy it now!!! BlaBlaBla...", tablet, apple));
 
         productDataStore.add(new Product("Samsung UE65MU6120 65 inch SMART Ultra HD TV - Black", 800, "USD", "Enjoy a beautifully vibrant Certified Ultra HD experience with our MU6100 UHD TV.", tv, samsung));
         productDataStore.add(new Product("Samsung UE55MU6400 55\" 4K Ultra HD Smart LED TV with Freesat HD", 789, "USD", "Active Crystal Colour HDR UHD 4K TV Certified Ultra HD One Remote Control SMART.", tv, samsung));
