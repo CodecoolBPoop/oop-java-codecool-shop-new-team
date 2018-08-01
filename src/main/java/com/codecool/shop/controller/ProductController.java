@@ -63,13 +63,14 @@ public class ProductController extends HttpServlet {
         context.setVariable("category", productCategoryDataStore.find(parsedId));
         context.setVariable("categories", productCategoryDataStore.getAll());
         context.setVariable("supplier", supplierDaoMem.getAll());
-        context.setVariable("products", productDataStore.getBy(productCategoryDataStore.find(1)));
+        context.setVariable("products", productDataStore.getAll());
         if (categoryButton ==true) {
             context.setVariable("products", productDataStore.getBy(productCategoryDataStore.find(parsedId)));
         }
         if (supplierButton==true){
             context.setVariable("products", productDataStore.getBy(supplierDaoMem.find(parsedSupplierId)));
         }
+
         context.setVariable("cartSize", OrderItem.totalItems);
         engine.process("product/index.html", context, resp.getWriter());
     }
