@@ -31,8 +31,9 @@ public class CartItems implements CartDao {
         if (findBoolean(id)) {
             OrderItem item = find(id);
             item.increaseQuantity();
+            item.increaseTotalPrice();
         } else {
-            productList.add(new OrderItem(product.getId(), product.getName(), 1));
+            productList.add(new OrderItem(product.getId(), product.getName(), 1, product.getDefaultPrice(), product.getDefaultCurrency()));
         }
 
     }
