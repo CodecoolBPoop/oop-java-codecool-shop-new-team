@@ -13,6 +13,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.swing.*;
+import java.awt.*;
 import java.io.IOException;
 import java.lang.reflect.Array;
 import java.util.HashMap;
@@ -37,14 +38,19 @@ public class Payment extends HttpServlet {
         WebContext context = new WebContext(req, resp, req.getServletContext());
         Map<String,String[]> parameterMap = req.getParameterMap();
 
-        if (parameterMap.get("card-holder-name")[0].length()>0 && parameterMap.get("card-number")[0].length()==10
+        if (parameterMap.get("card-holder-name")[0].length()>0 && parameterMap.get("card-number")[0].length()== 4
                 && parameterMap.get("cvv")[0].length()==3 && parameterMap.get("card-holder-name")[0].equals("xyz")
-                &&  parameterMap.get("card-number")[0].equals("0123456789") && parameterMap.get("cvv")[0].equals("123"))
+                &&  parameterMap.get("card-number")[0].equals("0123") && parameterMap.get("cvv")[0].equals("123"))
             {
             final JFrame parent = new JFrame();
-            JButton button = new JButton();
-            button.setText("Succesfull paying");
-            parent.add(button);
+
+            JButton b = new JButton();
+            b.setLayout(new BorderLayout());
+            JLabel label1 = new JLabel("Succesfull paying");
+            JLabel label2 = new JLabel("You have payed "  + OrderItem.totalPrice + " $");
+            b.add(BorderLayout.NORTH,label1);
+            b.add(BorderLayout.SOUTH,label2);
+            parent.add(b);
             parent.pack();
             parent.setVisible(true);
             resp.sendRedirect("/");
