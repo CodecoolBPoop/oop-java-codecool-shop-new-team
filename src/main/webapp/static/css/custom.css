@@ -108,6 +108,10 @@ form {
     float: right;
 }
 
+nav.navbar.navbar-expand-lg.navbar-dark.bg-dark {
+    height: 70px;
+}
+
 nav .brand {
     font-size: 5em;
 }
@@ -121,7 +125,7 @@ div .filter {
     height: 80px;
 }
 
-div .col-sm-4 {
+div .col-sm-5 {
     display         : flex;
     justify-content : center;
     align-items     : center;

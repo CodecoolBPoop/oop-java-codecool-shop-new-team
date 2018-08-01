@@ -2,6 +2,7 @@
 package com.codecool.shop.controller;
 
 import com.codecool.shop.config.TemplateEngineUtil;
+import com.codecool.shop.model.OrderItem;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.WebContext;
 
@@ -32,7 +33,8 @@ public class Payment extends HttpServlet {
 
         Map parameterMap = req.getParameterMap();
         System.out.println(parameterMap);
-        
+
+        context.setVariable("cartSize", OrderItem.totalItems);
 
         context.setVariable("cash", "9000000");
         engine.process("product/paypal.html", context, resp.getWriter());

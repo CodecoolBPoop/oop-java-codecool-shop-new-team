@@ -1,0 +1,31 @@
+div.col-sm-5 {
+    display         : flex;
+    justify-content : center;
+    align-items     : center;
+}
+
+div.col-sm-3 {
+    horiz-align: center;
+    justify-content : center;
+    align-items     : center;
+}
+
+label.col-sm-5.control-label {
+    text-align: center;
+}
+
+form.form-horizontal {
+    width: 600px;
+}
+
+legend {
+    font-size: 25px;
+}
+
+label.col-sm-5.control-label {
+    font-size: 17px;
+}
+label.col-sm-7 {
+    font-size: 15px;
+}
+

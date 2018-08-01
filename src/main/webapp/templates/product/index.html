@@ -43,7 +43,7 @@
         <ul class="navbar-nav mr-auto">
         </ul>
         <span class="navbar-text">
-            <a class="cart" href="#">
+            <a class="cart" href="/cart">
                 <i class="fas fa-shopping-cart"></i>
                 <span id="cart-num" th:text="${cartSize}">Number of Items</span>
             </a>
@@ -54,7 +54,7 @@
 <div class="container">
     <div class="container-fluid">
         <div class="row filter">
-            <div class="col-sm-4 col-xs-4">
+            <div class="col-sm-5 col-xs-5">
                 <form class="form-inline" action="index.html" method="get">
                     <select class="form-control form-control-lg selector" name="dropdown" id="dropdown">
                         <div th:each="cat,iterStat : ${categories}">
@@ -65,7 +65,7 @@
                 </form>
             </div>
 
-            <div class="col-sm-4 col-xs-4">
+            <div class="col-sm-5 col-xs-5">
                 <form class="form-inline" action="index.html" method="get"  >
                     <select class="form-control form-control-lg selector" name="dropdown2" id="dropdown2">
                         <div th:each="sup,iterStat : ${supplier}">
