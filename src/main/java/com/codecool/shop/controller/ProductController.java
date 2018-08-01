@@ -24,8 +24,6 @@ public class ProductController extends HttpServlet {
     private boolean categoryButton;
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        HttpServletRequest httpReq = req;
-        HttpServletResponse httpResp = resp;
         ProductDao productDataStore = ProductDaoMem.getInstance();
         ProductCategoryDao productCategoryDataStore = ProductCategoryDaoMem.getInstance();
         CartItems cartItems = CartItems.getInstance();
