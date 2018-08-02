@@ -37,6 +37,7 @@ public class CartController extends HttpServlet {
             Integer cartProductIdInt = Integer.parseInt(cartItemToRemove);
             cartItems.remove(cartProductIdInt);
             context.setVariable("totalPrice", OrderItem.getTotalPrice());
+            context.setVariable("cartSize", OrderItem.totalItems);
         }
 
         String cartItemToAdd = req.getParameter("plus");
@@ -44,6 +45,7 @@ public class CartController extends HttpServlet {
             Integer cartProductIdInt = Integer.parseInt(cartItemToAdd);
             cartItems.add(cartProductIdInt);
             context.setVariable("totalPrice", OrderItem.getTotalPrice());
+            context.setVariable("cartSize", OrderItem.totalItems);
         }
 
         engine.process("cart.html", context, resp.getWriter());
