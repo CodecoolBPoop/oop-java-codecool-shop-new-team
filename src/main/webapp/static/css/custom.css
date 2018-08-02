@@ -21,6 +21,9 @@
 
 div.item.col-xs-4.col-lg-4 {
     float: left;
+    height: 480px;
+    width: 350px;
+    overflow: auto;
 }
 
 div#products.row.list-group {
@@ -139,4 +142,14 @@ select#dropdown.form-control.form-control-lg.selector{
 select#dropdown2.form-control.form-control-lg.selector{
     width: 200px;
     margin-right: 15px;
+}
+
+img.list-group-image {
+    max-height: 200px;
+    max-width: 400px;
+}
+
+img.logo {
+    width: 45px;
+    height: 45px;
 }
