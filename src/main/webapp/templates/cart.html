@@ -63,11 +63,29 @@
                     <th scope="col">Price</th>
                 </tr>
             </thead>
-            <tbody id="cart-list" th:each="cartItem,iterStat : ${cartItems}">
-                <tr>
+            <tbody>
+                <tr id="cart-list" th:each="cartItem,iterStat : ${cartItems}">
                     <td><img class="cart-image" src="http://placehold.it/400x250/000/fff" th:attr="src='/static/img/product_' + ${cartItem.id} + '.jpg'" alt=""/></td>
                     <td th:text="${cartItem.getName()}">Item Name</td>
-                    <td th:text="${cartItem.getQuantity()}">Quantity</td>
+                    <td>
+                        <div class="center">
+                            <span class="input-group-btn">
+                                <form action="/cart" method="post">
+                                    <button name="minus" th:value="${cartItem.getId()}" type="submit" class="btn btn-default btn-number" data-type="minus" data-field="quant[1]">
+                                        <span class="glyphicon glyphicon-minus"></span>
+                                    </button>
+                                </form>
+                            </span>
+                            <input type="text" name="quant[1]" class="form-control input-number" th:value="${cartItem.getQuantity()}" min="1" max="10" disabled>
+                            <span class="input-group-btn">
+                                <form action="/cart" method="post">
+                                    <button name="plus" th:value="${cartItem.getId()}" type="submit" class="btn btn-default btn-number" data-type="plus" data-field="quant[1]">
+                                        <span class="glyphicon glyphicon-plus"></span>
+                                    </button>
+                                </form>
+                            </span>
+                            </div>
+                    </td>
                     <td th:text="${cartItem.getPrice()} + ${cartItem.getCurrency()}">Price</td>
                 </tr>
             </tbody>
