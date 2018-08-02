@@ -28,63 +28,79 @@
     <link rel="stylesheet" type="text/css" href="/static/css/custom.css" />
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.2.0/css/all.css"
           integrity="sha384-hWVjflwFxL6sNzntih27bfxkr27PmbbK/iSvJ+a4+0owXq79v+lsFkW54bOGbiDQ" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 </head>
 
 <body>
 
-<div class="jumbotron text-center">
-    <h1>Codecool Shop</h1>
-</div>
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <a class="navbar-brand brand" href="/"><img class="logo" src="/static/img/codecool.png"/></a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarText">
+        <ul class="navbar-nav mr-auto">
+        </ul>
+        <span class="navbar-text">
+            <a class="cart" href="/cart">
+                <i class="fas fa-shopping-cart"></i>
+                <span id="cart-num" th:text="${cartSize}">Number of Items</span>
+            </a>
+        </span>
+    </div>
+</nav>
 
 <div class="container">
-    <div class="well well-lg">
-        <form action="index.html" method="get">
-            <select name="dropdown" id="dropdown">
-                <div th:each="cat,iterStat : ${categories}">
-                    <option th:value="${cat.getId()}"><strong th:text="${cat.getName()}">Category Title</strong></option>
-                </div>
-            </select>
-            <button type="submit">submit choice</button>
-        </form>
+    <div class="container-fluid">
+        <div class="row filter">
+            <div class="col-sm-5 col-xs-5">
+                <form class="form-inline" action="index.html" method="get">
+                    <select class="form-control form-control-lg selector" name="dropdown" id="dropdown">
+                        <option value="" selected disabled hidden>Select Category</option>
+                        <div th:each="cat,iterStat : ${categories}">
+                            <option th:value="${cat.getId()}"><strong th:text="${cat.getName()}">Category Title</strong></option>
+                        </div>
+                    </select>
+                    <button type="submit" class="btn btn-secondary btn-lg choice">submit choice</button>
+                </form>
+            </div>
 
-        <form action="index.html" method="get">
-            <select name="dropdown2" id="dropdown2">
-                <div th:each="sup,iterStat : ${supplier}">
-                    <option th:value="${sup.getId()}"><strong th:text="${sup.getName()}">Supplier Title</strong></option>
-                </div>
-            </select>
-            <button type="submit">submit choice</button>
-        </form>
-
-        <div class="cart">
-            <a href="/cart">
-                <i class="fas fa-shopping-cart"></i>
-                <span th:text="${cartSize}">Number of Items</span>
-            </a>
+            <div class="col-sm-5 col-xs-5">
+                <form class="form-inline" action="index.html" method="get"  >
+                    <select class="form-control form-control-lg selector" name="dropdown2" id="dropdown2">
+                        <option value="" selected disabled hidden>Select Supplier</option>
+                        <div th:each="sup,iterStat : ${supplier}">
+                            <option th:value="${sup.getId()}"><strong th:text="${sup.getName()}">Supplier Title</strong></option>
+                        </div>
+                    </select>
+                    <button type="submit" class="btn btn-secondary btn-lg choice">submit choice</button>
+                </form>
+            </div>
         </div>
     </div>
 
     <div id="products" class="row list-group">
-
-        <div class="item col-xs-4 col-lg-4" th:each="prod,iterStat : ${products}">
-            <div class="thumbnail">
-                <img class="group list-group-image" src="http://placehold.it/400x250/000/fff" th:attr="src='/static/img/product_' + ${prod.id} + '.jpg'" alt="" />
-                <div class="caption">
-                    <h4 class="group inner list-group-item-heading" th:text="${prod.name}">Product name</h4>
-                    <p class="group inner list-group-item-text" th:text="${prod.description}">Product description... </p>
-                    <div class="row">
-                        <div class="col-xs-12 col-md-6">
-                            <p class="lead" th:text="${prod.getPrice()}">100 USD</p>
-                        </div>
-                        <div class="col-xs-12 col-md-6">
-                            <a class="btn btn-success" th:href="@{/add_to_cart/product(cart_item_id=${prod.id})}">Add to cart</a>
+        <div class="container-fluid product">
+            <div class="item col-xs-4 col-lg-4" th:each="prod,iterStat : ${products}">
+                <div class="thumbnail">
+                    <img class="group list-group-image" src="http://placehold.it/400x250/000/fff" th:attr="src='/static/img/product_' + ${prod.id} + '.jpg'" alt="" width="150" height="150"/>
+                    <div class="caption">
+                        <h4 class="group inner list-group-item-heading" th:text="${prod.name}">Product name</h4>
+                        <p class="group inner list-group-item-text" th:text="${prod.description}">Product description... </p>
+                        <div class="row">
+                            <div class="col-xs-12 col-md-6">
+                                <p class="lead" th:text="${prod.getPrice()}">100 USD</p>
+                            </div>
+                            <div class="col-xs-12 col-md-6">
+                                <a class="btn btn-success btn-lg" th:href="@{/add_to_cart/product(cart_item_id=${prod.id})}">Add to cart</a>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-
 </div>
 
 <div th:replace="footer.html :: copy"></div>

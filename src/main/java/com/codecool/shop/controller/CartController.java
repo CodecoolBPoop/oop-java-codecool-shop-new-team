@@ -29,6 +29,7 @@ public class CartController extends HttpServlet {
         WebContext context = new WebContext(req, resp, req.getServletContext());
         context.setVariable("cartItems", cartData.getAll());
         context.setVariable("totalPrice", OrderItem.getTotalPrice());
+        context.setVariable("cartSize", OrderItem.totalItems);
 
         CartItems cartItems = CartItems.getInstance();
         String cartItemToRemove = req.getParameter("minus");
