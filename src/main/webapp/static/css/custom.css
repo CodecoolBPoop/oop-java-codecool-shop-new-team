@@ -107,10 +107,6 @@ form {
     font-size: 3em;
 }
 
-.center {
-    width: 40px;
-    margin: 5px auto;
-}
 .cart {
     float: right;
 }
@@ -158,4 +154,10 @@ img.list-group-image {
 img.logo {
     width: 45px;
     height: 45px;
+}
+
+
+input[type="text"]
+{
+    font-size:14px;
 }

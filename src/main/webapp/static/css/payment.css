@@ -45,3 +45,16 @@ select#expiry-month.form-control {
 a.navbar-brand.brand {
     height: 92px;
 }
+
+h3.item-name {
+    font-size: 14px;
+}
+
+h3.item-price {
+    font-size: 14px;
+}
+
+button.btn.btn-default.btn-number {
+    width: 40px;
+    height: 40px;
+}
