@@ -43,11 +43,32 @@
                     <td>Price</td>
                 </tr>
             </th>
-            <tbody th:each="cartItem,iterStat : ${cartItems}">
-                <tr>
+            <tbody>
+                <tr th:each="cartItem,iterStat : ${cartItems}">
                     <td th:text="${cartItem.getName()}">Item Name</td>
                     <td th:text="${cartItem.getQuantity()}">Quantity</td>
                     <td th:text="${cartItem.getPrice()} + ${cartItem.getCurrency()}">Price</td>
+                    <td>
+                        <div class="center">
+                            <div class="input-group">
+                            <span class="input-group-btn">
+                                <form action="/cart" method="post">
+                                    <button name="minus" th:value="${cartItem.getId()}" type="submit" class="btn btn-default btn-number" data-type="minus" data-field="quant[1]">
+                                        <span class="glyphicon glyphicon-minus"></span>
+                                    </button>
+                                </form>
+                            </span>
+                            <input type="text" name="quant[1]" class="form-control input-number" th:value="${cartItem.getQuantity()}" min="1" max="10" disabled>
+                            <span class="input-group-btn">
+                                <form action="/cart" method="post">
+                                    <button name="plus" th:value="${cartItem.getId()}" type="submit" class="btn btn-default btn-number" data-type="plus" data-field="quant[1]">
+                                        <span class="glyphicon glyphicon-plus"></span>
+                                    </button>
+                                </form>
+                            </span>
+                            </div>
+                        </div>
+                    </td>
                 </tr>
             </tbody>
         </table>

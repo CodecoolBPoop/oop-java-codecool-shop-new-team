@@ -49,7 +49,24 @@ public class OrderItem {
         this.quantity ++;
         totalItems ++;
     }
+
+    public void decreaseQuantity() {
+        this.quantity --;
+        totalItems --;
+    }
+
     public void increaseTotalPrice() {
         totalPrice += price;
+    }
+
+    public void decreaseTotalPrice() {
+        totalPrice -= price;
+    }
+
+    public boolean notLastUnit() {
+        if (quantity > 1){
+            return true;
+        }
+        return false;
     }
 }

@@ -30,9 +30,25 @@ public class CartController extends HttpServlet {
         context.setVariable("cartItems", cartData.getAll());
         context.setVariable("totalPrice", OrderItem.getTotalPrice());
 
+        CartItems cartItems = CartItems.getInstance();
+        String cartItemToRemove = req.getParameter("minus");
+        if (cartItemToRemove != null) {
+            Integer cartProductIdInt = Integer.parseInt(cartItemToRemove);
+            cartItems.remove(cartProductIdInt);
+        }
 
+        String cartItemToAdd = req.getParameter("plus");
+        if (cartItemToAdd != null) {
+            Integer cartProductIdInt = Integer.parseInt(cartItemToAdd);
+            cartItems.add(cartProductIdInt);
+        }
 
         engine.process("cart.html", context, resp.getWriter());
+    }
+    @Override
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        doGet(req, resp);
+
     }
 
 }

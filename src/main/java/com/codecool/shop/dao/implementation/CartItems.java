@@ -40,7 +40,13 @@ public class CartItems implements CartDao {
 
     @Override
     public void remove(int id) {
-        productList.remove(id);
+        OrderItem item = find(id);
+        item.decreaseTotalPrice();
+        if (item.notLastUnit()) {
+            item.decreaseQuantity();
+        } else {
+            productList.remove(id-1);
+        }
     }
 
     @Override

@@ -75,3 +75,8 @@ form {
 .fa-shopping-cart {
     font-size: 3em;
 }
+
+.center {
+    width: 200px;
+    margin: 5px auto;
+}
