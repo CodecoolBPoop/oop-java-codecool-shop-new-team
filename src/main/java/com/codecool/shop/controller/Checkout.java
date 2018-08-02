@@ -1,6 +1,7 @@
 package com.codecool.shop.controller;
 
 import com.codecool.shop.config.TemplateEngineUtil;
+import com.codecool.shop.dao.implementation.CheckoutDao;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.WebContext;
 
@@ -16,11 +17,8 @@ import java.util.Map;
 
 @WebServlet(urlPatterns = {"/checkout"})
 public class Checkout extends HttpServlet {
-    public Map<String, String[]> data;
 
-    public Map<String, String[]> getData() {
-        return data;
-    }
+    CheckoutDao checkoutDaoMap = CheckoutDao.getInstance();
 
     public void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -28,13 +26,14 @@ public class Checkout extends HttpServlet {
         TemplateEngine engine = TemplateEngineUtil.getTemplateEngine(request.getServletContext());
         WebContext context = new WebContext(request, response, request.getServletContext());
         engine.process("product/checkout.html", context, response.getWriter());
+
     }
 
     public void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-        data = request.getParameterMap();
+        checkoutDaoMap.add(request.getParameterMap());
+        System.out.println(checkoutDaoMap.getAll());
         response.sendRedirect("/payment");
-
     }
 }
