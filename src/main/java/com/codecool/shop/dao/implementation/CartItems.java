@@ -11,7 +11,7 @@ import java.util.List;
 
 public class CartItems implements CartDao {
 
-    private List<OrderItem> productList = new ArrayList<>();
+    public static List<OrderItem> productList = new ArrayList<>();
     private static CartItems instance = null;
 
     private CartItems(){
