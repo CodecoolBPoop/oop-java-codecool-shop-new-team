@@ -67,11 +67,8 @@
                 <tr id="cart-list" th:each="cartItem,iterStat : ${cartItems}">
                     <td><img class="cart-image" src="http://placehold.it/400x250/000/fff" th:attr="src='/static/img/product_' + ${cartItem.id} + '.jpg'" alt=""/></td>
                     <td th:text="${cartItem.getName()}">Item Name</td>
-                    <td th:text="${cartItem.getQuantity()}">Quantity</td>
-                    <td th:text="${cartItem.getPrice()} + ${cartItem.getCurrency()}">Price</td>
                     <td>
                         <div class="center">
-                            <div class="input-group">
                             <span class="input-group-btn">
                                 <form action="/cart" method="post">
                                     <button name="minus" th:value="${cartItem.getId()}" type="submit" class="btn btn-default btn-number" data-type="minus" data-field="quant[1]">
@@ -88,8 +85,8 @@
                                 </form>
                             </span>
                             </div>
-                        </div>
                     </td>
+                    <td th:text="${cartItem.getPrice()} + ${cartItem.getCurrency()}">Price</td>
                 </tr>
             </tbody>
         </table>
