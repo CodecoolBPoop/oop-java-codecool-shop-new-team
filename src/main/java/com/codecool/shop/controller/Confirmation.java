@@ -4,6 +4,7 @@ import com.codecool.shop.config.TemplateEngineUtil;
 import com.codecool.shop.dao.CartDao;
 import com.codecool.shop.dao.implementation.CartItems;
 import com.codecool.shop.dao.implementation.CheckoutDao;
+import com.codecool.shop.dao.implementation.FinalData;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.WebContext;
 
@@ -22,6 +23,7 @@ public class Confirmation extends HttpServlet {
 
     CheckoutDao checkoutDaoMap = CheckoutDao.getInstance();
     CartDao cartData = CartItems.getInstance();
+    FinalData finalData = FinalData.getInstance();
 
     public void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -40,6 +42,7 @@ public class Confirmation extends HttpServlet {
         context.setVariable("shipping_postalcode", persDetails.get("shipping_postal_code")[0]);
         context.setVariable("shipping_street", persDetails.get("shipping_street")[0]);
         context.setVariable("shipping_housenumber", persDetails.get("shipping_house_number")[0]);
+        context.setVariable("final_price", finalData.getFinalOrderPrice());
 
         engine.process("product/Confirmation.html", context, response.getWriter());
     }
