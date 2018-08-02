@@ -29,7 +29,6 @@ public class Confirmation extends HttpServlet {
         TemplateEngine engine = TemplateEngineUtil.getTemplateEngine(request.getServletContext());
         WebContext context = new WebContext(request, response, request.getServletContext());
 
-        context.setVariable("personalDetails", checkoutDaoMap.getAll());
         Map <String, String[]> persDetails = checkoutDaoMap.getAll();
         context.setVariable("cartItems", cartData.getAll());
         context.setVariable("firstname", persDetails.get("firstname")[0]);
@@ -42,10 +41,7 @@ public class Confirmation extends HttpServlet {
         context.setVariable("shipping_street", persDetails.get("shipping_street")[0]);
         context.setVariable("shipping_housenumber", persDetails.get("shipping_house_number")[0]);
 
-
-
         engine.process("product/Confirmation.html", context, response.getWriter());
-
     }
 
     public void doPost(HttpServletRequest request, HttpServletResponse response)
