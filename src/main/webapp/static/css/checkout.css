@@ -1,0 +1,52 @@
+div.form-group.col-md-4.data {
+    height: 500px;
+    display         : flex;
+    justify-content : center;
+    align-items     : center;
+}
+
+div.form-group.col-md-4.personal-data {
+    height: 345px;
+    display         : flex;
+    justify-content : center;
+    align-items     : center;
+}
+
+div.form-group {
+    margin: 0px;
+    display         : flex;
+    justify-content : center;
+    align-items     : center;
+}
+
+label.col-sm-12.col-form-label {
+    font-size: 14px;
+}
+legend {
+    font-size: 2rem;
+}
+
+input[type="text"]
+{
+    font-size:14px;
+}
+
+input[type="email"]
+{
+    font-size:14px;
+}
+
+input[type="number"]
+{
+    font-size:14px;
+}
+
+button.btn.btn-primary.btn-lg.btn-block {
+    margin-bottom: 20px;
+    margin-top: 20px;
+}
+
+label.col-sm-12.col-form-label {
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
