@@ -2,6 +2,7 @@
 package com.codecool.shop.controller;
 
 import com.codecool.shop.config.TemplateEngineUtil;
+import com.codecool.shop.dao.implementation.CartItems;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.WebContext;
 import com.codecool.shop.model.OrderItem;
@@ -53,6 +54,9 @@ public class Payment extends HttpServlet {
             parent.add(b);
             parent.pack();
             parent.setVisible(true);
+            CartItems.productList.clear();
+            OrderItem.totalItems = 0;
+            OrderItem.totalPrice = 0;
             resp.sendRedirect("/");
 
         }
