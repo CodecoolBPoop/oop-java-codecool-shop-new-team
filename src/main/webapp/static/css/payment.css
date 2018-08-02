@@ -29,3 +29,19 @@ label.col-sm-7 {
     font-size: 15px;
 }
 
+input[type="text"]
+{
+    font-size:14px;
+}
+
+select.form-control {
+    font-size: 14px;
+}
+
+select#expiry-month.form-control {
+    font-size: 14px;
+}
+
+a.navbar-brand.brand {
+    height: 92px;
+}

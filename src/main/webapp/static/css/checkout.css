@@ -44,6 +44,9 @@ input[type="number"]
 button.btn.btn-primary.btn-lg.btn-block {
     margin-bottom: 20px;
     margin-top: 20px;
+    height: 40px;
+    font-size: 18px;
+    text-align: center;
 }
 
 label.col-sm-12.col-form-label {
