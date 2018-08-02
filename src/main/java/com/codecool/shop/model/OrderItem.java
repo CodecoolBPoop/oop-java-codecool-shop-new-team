@@ -21,7 +21,7 @@ public class OrderItem {
         return "Total value: " + String.valueOf(roundedTotalPrice(totalPrice)) + " USD";
     }
 
-    public OrderItem(int id, String name, int quantity, double price, Currency currency) {
+    public OrderItem(int id, String name, int quantity, float price, Currency currency) {
         this.id = id;
         this.quantity = quantity;
         this.name = name;
@@ -43,8 +43,9 @@ public class OrderItem {
         return id;
     }
 
-    public double getPrice() {
-        return price * quantity;
+    public String getPrice() {
+        DecimalFormat twoDecimals = new DecimalFormat("#.##");
+        return twoDecimals.format(price * quantity);
     }
 
     public Currency getCurrency() {
@@ -73,6 +74,7 @@ public class OrderItem {
         if (quantity > 1){
             return true;
         }
+        decreaseQuantity();
         decreaseTotalPrice();
         return false;
     }
