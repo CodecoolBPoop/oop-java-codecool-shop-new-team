@@ -47,8 +47,8 @@ public class Payment extends HttpServlet {
 
             JButton b = new JButton();
             b.setLayout(new BorderLayout());
-            JLabel label1 = new JLabel("Succesfull paying");
-            JLabel label2 = new JLabel("You have payed "  + OrderItem.totalPrice + " $");
+            JLabel label1 = new JLabel("Succesful paying");
+            JLabel label2 = new JLabel(OrderItem.getTotalPrice());
             b.add(BorderLayout.NORTH,label1);
             b.add(BorderLayout.SOUTH,label2);
             parent.add(b);
