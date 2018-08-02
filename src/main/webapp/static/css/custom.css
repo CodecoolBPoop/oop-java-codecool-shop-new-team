@@ -107,6 +107,10 @@ form {
     font-size: 3em;
 }
 
+.center {
+    width: 40px;
+    margin: 5px auto;
+}
 .cart {
     float: right;
 }

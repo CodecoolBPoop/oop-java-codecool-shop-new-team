@@ -28,11 +28,30 @@ public class CartController extends HttpServlet {
         TemplateEngine engine = TemplateEngineUtil.getTemplateEngine(req.getServletContext());
         WebContext context = new WebContext(req, resp, req.getServletContext());
         context.setVariable("cartItems", cartData.getAll());
-        context.setVariable("totalPrice", OrderItem.getTotalPrice());
         context.setVariable("cartSize", OrderItem.totalItems);
+        context.setVariable("totalPrice", OrderItem.getTotalPrice());
 
+        CartItems cartItems = CartItems.getInstance();
+        String cartItemToRemove = req.getParameter("minus");
+        if (cartItemToRemove != null) {
+            Integer cartProductIdInt = Integer.parseInt(cartItemToRemove);
+            cartItems.remove(cartProductIdInt);
+            context.setVariable("totalPrice", OrderItem.getTotalPrice());
+        }
+
+        String cartItemToAdd = req.getParameter("plus");
+        if (cartItemToAdd != null) {
+            Integer cartProductIdInt = Integer.parseInt(cartItemToAdd);
+            cartItems.add(cartProductIdInt);
+            context.setVariable("totalPrice", OrderItem.getTotalPrice());
+        }
 
         engine.process("cart.html", context, resp.getWriter());
+    }
+    @Override
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        doGet(req, resp);
+
     }
 
 }

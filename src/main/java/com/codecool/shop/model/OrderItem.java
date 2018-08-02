@@ -1,21 +1,27 @@
 package com.codecool.shop.model;
 
 import java.util.Currency;
+import java.text.DecimalFormat;
 
 public class OrderItem {
     private int id;
     private String name;
     private int quantity;
-    private float price;
+    private double price;
     private Currency currency;
     public static int totalItems = 0;
-    public static float totalPrice = 0;
+    public static double totalPrice = 0;
 
-    public static String getTotalPrice() {
-        return "Total value: " + String.valueOf(totalPrice) + " USD";
+    static double roundedTotalPrice (double origTotalPrice){
+        DecimalFormat twoDForm = new DecimalFormat("#.##");
+        return Double.valueOf(twoDForm.format(origTotalPrice));
     }
 
-    public OrderItem(int id, String name, int quantity, float price, Currency currency) {
+    public static String getTotalPrice() {
+        return "Total value: " + String.valueOf(roundedTotalPrice(totalPrice)) + " USD";
+    }
+
+    public OrderItem(int id, String name, int quantity, double price, Currency currency) {
         this.id = id;
         this.quantity = quantity;
         this.name = name;
@@ -37,7 +43,7 @@ public class OrderItem {
         return id;
     }
 
-    public float getPrice() {
+    public double getPrice() {
         return price * quantity;
     }
 
@@ -49,7 +55,25 @@ public class OrderItem {
         this.quantity ++;
         totalItems ++;
     }
+
+    public void decreaseQuantity() {
+        this.quantity --;
+        totalItems --;
+    }
+
     public void increaseTotalPrice() {
         totalPrice += price;
+    }
+
+    public void decreaseTotalPrice() {
+        totalPrice -= price;
+    }
+
+    public boolean notLastUnit() {
+        if (quantity > 1){
+            return true;
+        }
+        decreaseTotalPrice();
+        return false;
     }
 }
