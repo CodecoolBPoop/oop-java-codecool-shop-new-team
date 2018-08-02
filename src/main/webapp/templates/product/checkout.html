@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Checkout</title>
+
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+          integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous" />
+
+    <link rel="stylesheet" type="text/css" href="/static/css/custom.css" />
+
+</head>
+
+<body>
+
+<div class="">
+    <h1>Checkout page</h1>
+</div>
+
+<div class="container">
+    <form action="/checkout" method="post">
+        <div class="container_personal_data">
+            <h4>Personal data</h4>
+            First name:<br>
+            <input type="text" name="firstname" placeholder="First name">
+            <br>
+            Last name:<br>
+            <input type="text" name="lastname" placeholder="Last name">
+            <br>
+            Email:<br>
+            <input type="email" name="email" placeholder="Email">
+            <br>
+            Phone number<br>
+            <input type="number" name="phone_number" placeholder="Phone number">
+        </div>
+        <br><br>
+        <div class="container_billing">
+            <h4>Billing Address</h4>
+            Name:<br>
+            <input type="text" name="billing_name" placeholder="Billing name">
+            <br>
+            Country<br>
+            <input type="text" name="billing_country" placeholder="Country">
+            <br>
+            City<br>
+            <input type="text" name="billing_city" placeholder="City">
+            <br>
+            Postal code<br>
+            <input type="number" name="billing_postal_code" placeholder="Postal code">
+            <br>
+            Street<br>
+            <input type="text" name="billing_street" placeholder="Street">
+            <br>
+            House number<br>
+            <input type="text" name="billing_house_ number" placeholder="House number">
+        </div>
+        <br><br>
+        <div class="container_shipping">
+            <h4>Shipping Address</h4>
+            Name:<br>
+            <input type="text" name="shipping_name" placeholder="Shipping name">
+            <br>
+            Country<br>
+            <input type="text" name="shipping_country" placeholder="Country">
+            <br>
+            City<br>
+            <input type="text" name="shipping_city" placeholder="City">
+            <br>
+            Postal code<br>
+            <input type="number" name="shipping_postal_code" placeholder="Postal code">
+            <br>
+            Street<br>
+            <input type="text" name="shipping_street" placeholder="Street">
+            <br>
+            House number<br>
+            <input type="text" name="shipping_house_ number" placeholder="House number">
+        </div>
+        <br><br>
+        <input type="submit" value="Submit" class="btn btn-large btn-success">
+        <br><br>
+    </form>
+</div>
+
+<div th:replace="footer.html :: copy"></div>
+
+</body>
+</html>
