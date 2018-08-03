@@ -33,7 +33,7 @@ public class CartController extends HttpServlet {
 
         CartItems cartItems = CartItems.getInstance();
         String cartItemToRemove = req.getParameter("minus");
-        if (cartItemToRemove != null) {
+        if (cartItemToRemove != null && OrderItem.totalItems != 0) {
             Integer cartProductIdInt = Integer.parseInt(cartItemToRemove);
             cartItems.remove(cartProductIdInt);
             context.setVariable("totalPrice", OrderItem.getTotalPrice());
