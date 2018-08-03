@@ -43,6 +43,7 @@ public class Payment extends HttpServlet {
                 && parameterMap.get("cvv")[0].length()==3 && parameterMap.get("card-holder-name")[0].equals("xyz")
                 &&  parameterMap.get("card-number")[0].equals("0123") && parameterMap.get("cvv")[0].equals("123"))
             {
+            /*
             final JFrame parent = new JFrame();
 
             JButton b = new JButton();
@@ -57,7 +58,11 @@ public class Payment extends HttpServlet {
             CartItems.productList.clear();
             OrderItem.totalItems = 0;
             OrderItem.totalPrice = 0;
-            resp.sendRedirect("/");
+            */
+            resp.sendRedirect("/confirmation");
+            CartItems.productList.clear();
+            OrderItem.totalItems = 0;
+            OrderItem.totalPrice = 0;
 
         }
         System.out.println(parameterMap);
