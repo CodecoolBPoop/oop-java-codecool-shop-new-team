@@ -1,6 +1,7 @@
 package com.codecool.shop.controller;
 
 import com.codecool.shop.config.TemplateEngineUtil;
+import com.codecool.shop.dao.implementation.FinalData;
 import com.codecool.shop.model.OrderItem;
 import com.codecool.shop.dao.implementation.CheckoutDao;
 import org.thymeleaf.TemplateEngine;
@@ -20,12 +21,15 @@ import java.util.Map;
 public class Checkout extends HttpServlet {
 
     CheckoutDao checkoutDaoMap = CheckoutDao.getInstance();
+    FinalData finalData = FinalData.getInstance();
 
     public void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
         TemplateEngine engine = TemplateEngineUtil.getTemplateEngine(request.getServletContext());
         WebContext context = new WebContext(request, response, request.getServletContext());
+
+        finalData.setFinalOrderPrice(OrderItem.getRoundedTotalPrice());
 
         context.setVariable("cartSize", OrderItem.totalItems);
         engine.process("product/checkout.html", context, response.getWriter());

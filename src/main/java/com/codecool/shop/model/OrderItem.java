@@ -21,6 +21,10 @@ public class OrderItem {
         return "Total value: " + String.valueOf(roundedTotalPrice(totalPrice)) + " USD";
     }
 
+    public static double getRoundedTotalPrice() {
+        return roundedTotalPrice(totalPrice);
+    }
+
     public OrderItem(int id, String name, int quantity, float price, Currency currency) {
         this.id = id;
         this.quantity = quantity;
