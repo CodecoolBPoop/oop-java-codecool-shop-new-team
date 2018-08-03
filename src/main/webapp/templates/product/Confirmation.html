@@ -26,6 +26,7 @@
             crossorigin="anonymous"></script>
 
     <link rel="stylesheet" type="text/css" href="/static/css/custom.css" />
+    <link rel="stylesheet" type="text/css" href="/static/css/confirm.css" />
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.2.0/css/all.css"
           integrity="sha384-hWVjflwFxL6sNzntih27bfxkr27PmbbK/iSvJ+a4+0owXq79v+lsFkW54bOGbiDQ" crossorigin="anonymous">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
@@ -52,14 +53,16 @@
 </nav>
 
 <div class="container">
-    <h1>Purchase Confirmation</h1>
-    <h3>Thank you for your purchase!</h3>
-    <div th:text="'First name: ' + ${firstname} "></div>
-    <div th:text="'Last name: ' + ${lastname} "></div>
-    <div th:text="'Email: ' + ${email} "></div>
-    <div th:text="'Phone number: ' + ${phone_number} "></div>
-    <div th:text="'Shipping address: ' + ${shipping_country} + ' ' +  ${shipping_city} + ' ' + ${shipping_postalcode}
-    + ' ' + ${shipping_street} + ' ' + ${shipping_housenumber}"></div>
+    <legend class="purchase-title">Purchase Confirmation</legend>
+    <h2 class="message">Thank you for your purchase!</h2>
+    <div class="pers-info"><strong>Full name: </strong><span th:text="${firstname} + ' ' + ${lastname}"></span></div>
+    <div class="pers-info"><strong>Email: </strong><span th:text="${email}"></span></div>
+    <div class="pers-info"><strong>Phone number: </strong><span th:text="${phone_number}"></span></div>
+    <div class="pers-info"><strong>Address: </strong><span th:text="${shipping_country} + ', ' +  ${shipping_city} + ', ' + ${shipping_postalcode}
+    + '. ' + ${shipping_street} + ' ' + ${shipping_housenumber} + '.'"></span></div>
+    <div>
+        <h2 class="price" th:text="'Total Payment: ' + ${final_price}"></h2>
+    </div>
 </div>
 
 <div th:replace="footer.html :: copy"></div>
