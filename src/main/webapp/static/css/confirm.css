@@ -1,0 +1,23 @@
+legend.purchase-title {
+    font-size: 30px;
+    text-align: center;
+}
+
+h2.message {
+    font-size: 20px;
+    text-align: center;
+}
+
+h2.price {
+    font-size: 20px;
+    text-align: center;
+}
+
+div.pers-info {
+    font-size: 15px;
+    text-align: center;
+}
+
+div.container {
+    height: 400px;
+}
