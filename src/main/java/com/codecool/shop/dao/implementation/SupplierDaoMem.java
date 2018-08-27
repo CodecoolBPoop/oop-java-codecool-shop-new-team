@@ -25,8 +25,18 @@ public class SupplierDaoMem implements SupplierDao {
 
     @Override
     public void add(Supplier supplier) {
-        supplier.setId(data.size() + 1);
-        data.add(supplier);
+        if (findExistingSupplier(supplier)) {
+            supplier.setId(data.size() + 1);
+            data.add(supplier);
+        }
+    }
+
+    public boolean findExistingSupplier(Supplier givenSupplier) {
+        for (Supplier supplier : data){
+            if (supplier.getName().equals(givenSupplier.getName())) {
+                return false;
+            }
+        } return true;
     }
 
     @Override
@@ -36,7 +46,9 @@ public class SupplierDaoMem implements SupplierDao {
 
     @Override
     public void remove(int id) {
-        data.remove(find(id));
+        if (data.size() > 0) {
+            data.remove(find(id));
+        }
     }
 
     @Override
