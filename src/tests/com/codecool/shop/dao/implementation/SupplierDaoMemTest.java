@@ -40,7 +40,7 @@ class SupplierDaoMemTest {
     }
 
     @Test
-    public void testNotFounnd() {
+    public void testNotFound() {
         Supplier testing = testSupplierDaoMem.find(2);
         assertEquals(null, testing);
     }
