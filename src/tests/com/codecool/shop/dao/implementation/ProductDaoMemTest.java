@@ -15,7 +15,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class ProductDaoMemTest {
 
-    ProductDaoJDBC testProductDao = new ProductDaoJDBC();
+    ProductDaoJDBC testProductDao = ProductDaoJDBC.getInstance();
     Supplier testSupplier = new Supplier("Test", "Testsupplier");
     ProductCategory testCategory = new ProductCategory("Testcategory", "Testdepartment", "Testdescr");
     Product testProduct = new Product("Test Product", 100, "USD", "Testing", testCategory, testSupplier);
@@ -26,6 +26,7 @@ class ProductDaoMemTest {
     @BeforeEach
     public void init(){
         testProductDao.add(testProduct);
+        System.out.println(testProduct.getId());
     }
 
     @Test
