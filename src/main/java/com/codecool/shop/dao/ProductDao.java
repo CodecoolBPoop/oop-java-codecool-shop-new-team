@@ -14,7 +14,7 @@ public interface ProductDao {
     void remove(int id) throws SQLException;
 
     List<Product> getAll() throws SQLException;
-    List<Product> getBy(Supplier supplier);
-    List<Product> getBy(ProductCategory productCategory);
+    List<Product> getBy(Supplier supplier) throws SQLException;
+    List<Product> getBy(ProductCategory productCategory) throws SQLException;
 
 }

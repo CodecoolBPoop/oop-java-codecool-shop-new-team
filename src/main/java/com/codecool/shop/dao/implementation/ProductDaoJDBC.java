@@ -16,8 +16,8 @@ public class ProductDaoJDBC implements ProductDao {
     PreparedStatement preparedStatement = null;
     Connection con = conn.getConnection();
 
-    ProductCategoryDaoJDBC categoriesDB = new ProductCategoryDaoJDBC();
-    SupplierDaoJDBC suppliersDB = new SupplierDaoJDBC();
+    ProductCategoryDaoJDBC categoriesDB = ProductCategoryDaoJDBC.getInstance();
+    SupplierDaoJDBC suppliersDB = SupplierDaoJDBC.getInstance();
 
     private ProductDaoJDBC() throws SQLException {
     }
@@ -78,13 +78,31 @@ public class ProductDaoJDBC implements ProductDao {
     }
 
     @Override
-    public List<Product> getBy(Supplier supplier) {
-        return null;
+    public List<Product> getBy(Supplier supplier) throws SQLException {
+        String getProductsBySupplierQuery = "SELECT * FROM products WHERE supplier_id = ?";
+
+            preparedStatement = con.prepareStatement(getProductsBySupplierQuery);
+            preparedStatement.setInt(1, supplier.getId());
+            ResultSet allProducts = preparedStatement.executeQuery();
+            List <Product> productList = new ArrayList<Product>();
+            while (allProducts.next()) {
+                productList.add(getProduct(allProducts.getInt("id"), allProducts));
+            }
+            return productList;
     }
 
     @Override
-    public List<Product> getBy(ProductCategory productCategory) {
-        return null;
+    public List<Product> getBy(ProductCategory productCategory) throws SQLException {
+        String getProductsByCategoryQuery = "SELECT * FROM products WHERE category_id = ?";
+
+            preparedStatement = con.prepareStatement(getProductsByCategoryQuery);
+            preparedStatement.setInt(1, productCategory.getId());
+            ResultSet allProducts = preparedStatement.executeQuery();
+            List <Product> productList = new ArrayList<Product>();
+            while (allProducts.next()) {
+                productList.add(getProduct(allProducts.getInt("id"), allProducts));
+            }
+            return productList;
     }
 
     private Product getProduct(int productId, ResultSet resultSet) throws SQLException {
