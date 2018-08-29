@@ -2,11 +2,8 @@ package com.codecool.shop.controller;
 
 import com.codecool.shop.dao.ProductCategoryDao;
 import com.codecool.shop.dao.ProductDao;
-import com.codecool.shop.dao.implementation.CartItems;
-import com.codecool.shop.dao.implementation.ProductCategoryDaoMem;
-import com.codecool.shop.dao.implementation.ProductDaoMem;
+import com.codecool.shop.dao.implementation.*;
 import com.codecool.shop.config.TemplateEngineUtil;
-import com.codecool.shop.dao.implementation.SupplierDaoMem;
 import com.codecool.shop.model.OrderItem;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.WebContext;
@@ -17,6 +14,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.sql.SQLException;
 
 @WebServlet(urlPatterns = {"/"})
 public class ProductController extends HttpServlet {
@@ -27,7 +25,12 @@ public class ProductController extends HttpServlet {
         ProductDao productDataStore = ProductDaoMem.getInstance();
         ProductCategoryDao productCategoryDataStore = ProductCategoryDaoMem.getInstance();
         CartItems cartItems = CartItems.getInstance();
-        SupplierDaoMem supplierDaoMem = SupplierDaoMem.getInstance();
+        SupplierDaoJDBC supplierDaoMem = null;
+        try {
+            supplierDaoMem = SupplierDaoJDBC.getInstance();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
 
         String supplierID = req.getParameter("dropdown2");
         String categoryID = req.getParameter("dropdown");
@@ -62,13 +65,21 @@ public class ProductController extends HttpServlet {
         context.setVariable("recipient", "World");
         context.setVariable("category", productCategoryDataStore.find(parsedId));
         context.setVariable("categories", productCategoryDataStore.getAll());
-        context.setVariable("supplier", supplierDaoMem.getAll());
+        try {
+            context.setVariable("supplier", supplierDaoMem.getAll());
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
         context.setVariable("products", productDataStore.getAll());
         if (categoryButton ==true) {
             context.setVariable("products", productDataStore.getBy(productCategoryDataStore.find(parsedId)));
         }
         if (supplierButton==true){
-            context.setVariable("products", productDataStore.getBy(supplierDaoMem.find(parsedSupplierId)));
+            try {
+                context.setVariable("products", productDataStore.getBy(supplierDaoMem.find(parsedSupplierId)));
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
 
         context.setVariable("cartSize", OrderItem.totalItems);
