@@ -23,10 +23,12 @@ public class ProductController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         ProductDao productDataStore = ProductDaoMem.getInstance();
-        ProductCategoryDao productCategoryDataStore = ProductCategoryDaoMem.getInstance();
         CartItems cartItems = CartItems.getInstance();
+
+        ProductCategoryDaoJDBC productCategoryDataStore = null;
         SupplierDaoJDBC supplierDaoMem = null;
         try {
+            productCategoryDataStore = ProductCategoryDaoJDBC.getInstance();
             supplierDaoMem = SupplierDaoJDBC.getInstance();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -63,8 +65,16 @@ public class ProductController extends HttpServlet {
         WebContext context = new WebContext(req, resp, req.getServletContext());
 //      context.setVariables(params);
         context.setVariable("recipient", "World");
-        context.setVariable("category", productCategoryDataStore.find(parsedId));
-        context.setVariable("categories", productCategoryDataStore.getAll());
+        try {
+            context.setVariable("category", productCategoryDataStore.find(parsedId));
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        try {
+            context.setVariable("categories", productCategoryDataStore.getAll());
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
         try {
             context.setVariable("supplier", supplierDaoMem.getAll());
         } catch (SQLException e) {
@@ -72,7 +82,11 @@ public class ProductController extends HttpServlet {
         }
         context.setVariable("products", productDataStore.getAll());
         if (categoryButton ==true) {
-            context.setVariable("products", productDataStore.getBy(productCategoryDataStore.find(parsedId)));
+            try {
+                context.setVariable("products", productDataStore.getBy(productCategoryDataStore.find(parsedId)));
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
         if (supplierButton==true){
             try {
