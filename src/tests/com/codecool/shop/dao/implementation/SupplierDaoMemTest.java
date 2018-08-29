@@ -5,6 +5,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,55 +13,61 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class SupplierDaoMemTest {
 
-    SupplierDaoMem testSupplierDaoMem = SupplierDaoMem.getInstance();
+    SupplierDaoJDBC testSupplierDao = SupplierDaoJDBC.getInstance();
     Supplier testSupplier = new Supplier("TestSupplier", "Testing");
+
+    SupplierDaoMemTest() throws SQLException {
+    }
 
     @BeforeEach
     public void init(){
-        testSupplierDaoMem.add(testSupplier);
+        testSupplierDao.add(testSupplier);
     }
 
     @Test
-    public void testAddOneSupplier() {
-        assertEquals(1, testSupplierDaoMem.getAll().size());
-        assertEquals(testSupplier, testSupplierDaoMem.getAll().get(0));
+    public void testAddOneSupplier() throws SQLException {
+        int lastSupplier = testSupplierDao.getAll().size();
+        int currentSize = testSupplierDao.getAll().size();
+        testSupplierDao.add(testSupplier);
+        assertEquals(currentSize + 1, testSupplierDao.getAll().size());
+        assertEquals(testSupplier.getName(), testSupplierDao.getAll().get(lastSupplier-1).getName());
+        assertEquals(testSupplier.getDescription(), testSupplierDao.getAll().get(lastSupplier-1).getDescription());
+        int id = testSupplierDao.getLastId();
+        testSupplierDao.remove(id);
     }
 
     @Test
-    public void testAddSameSupplier(){
-        Supplier testSupplier = new Supplier("TestSupplier", "Testing");
-        testSupplierDaoMem.add(testSupplier);
-        System.out.println(testSupplierDaoMem.getAll());
+    public void testFind() throws SQLException {
+        int lastId = testSupplierDao.getLastId();
+        int lastSupplier = testSupplierDao.getAll().size();
+        Supplier latestSupplier = testSupplierDao.getAll().get(lastSupplier-1);
+        assertEquals(latestSupplier.getId(), testSupplierDao.find(lastId).getId());
     }
 
     @Test
-    public void testFind() {
-        Supplier testing = testSupplierDaoMem.find(1);
-        assertEquals(testSupplier, testing);
-    }
-
-    @Test
-    public void testNotFound() {
-        Supplier testing = testSupplierDaoMem.find(2);
+    public void testNotFound() throws SQLException {
+        Supplier testing = testSupplierDao.find(2);
         assertEquals(null, testing);
     }
 
     @Test
-    public void testRemove() {
-        testSupplierDaoMem.remove(1);
-        assertEquals(0, testSupplierDaoMem.getAll().size());
+    public void testRemove() throws SQLException {
+        int id = testSupplierDao.getLastId();
+        testSupplierDao.remove(id);
+        assertEquals(0, testSupplierDao.getAll().size());
     }
 
     @Test
-    public void testGetAll() {
+    public void testGetAll() throws SQLException {
         List<Supplier> expected = new ArrayList<>();
         expected.add(testSupplier);
-        assertEquals(expected.get(0).getName(), testSupplierDaoMem.getAll().get(0).getName());
-        assertEquals(expected.size(), testSupplierDaoMem.getAll().size());
+        assertEquals(expected.get(0).getName(), testSupplierDao.getAll().get(0).getName());
+        assertEquals(expected.size(), testSupplierDao.getAll().size());
     }
 
     @AfterEach
-    public void destroy(){
-        testSupplierDaoMem.remove(1);
+    public void destroy() throws SQLException {
+        int id = testSupplierDao.getLastId();
+        testSupplierDao.remove(id);
     }
 }

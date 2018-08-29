@@ -8,8 +8,8 @@ import java.sql.Statement;
 public class JDBCConnection {
 
     private static final String DATABASE = "jdbc:postgresql://localhost:5432/codecoolshop";
-    private static final String DB_USER = "postgres";
-    private static final String DB_PASSWORD = "postgres";
+    private static final String DB_USER = "henrynguyen";
+    private static final String DB_PASSWORD = "";
 
     public Connection getConnection() throws SQLException {
         return DriverManager.getConnection(
