@@ -5,27 +5,35 @@ import com.codecool.shop.model.Product;
 import com.codecool.shop.model.ProductCategory;
 import com.codecool.shop.model.Supplier;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
+import java.sql.*;
+import java.util.ArrayList;
 import java.util.List;
 
 public class ProductDaoJDBC implements ProductDao {
 
+    private static ProductDaoJDBC instance = null;
     JDBCConnection conn = new JDBCConnection();
     PreparedStatement preparedStatement = null;
     Connection con = conn.getConnection();
 
-    public ProductDaoJDBC() throws SQLException {
+    ProductCategoryDaoJDBC categoriesDB = new ProductCategoryDaoJDBC();
+    SupplierDaoJDBC suppliersDB = new SupplierDaoJDBC();
+
+    private ProductDaoJDBC() throws SQLException {
+    }
+
+    public static ProductDaoJDBC getInstance() throws SQLException {
+        if (instance == null) {
+            instance = new ProductDaoJDBC();
+        }
+        return instance;
     }
 
     @Override
-    public void add(Product product) {
+    public void add(Product product) throws SQLException {
         String addProductQuery = "INSERT INTO product (name, price, currency, description, category_id, supplier_id) " +
                 "VALUES (?,?,?,?,?,?);";
 
-        try {
             preparedStatement = con.prepareStatement(addProductQuery);
             preparedStatement.setString(1,product.getName());
             preparedStatement.setFloat(2, product.getDefaultPrice());
@@ -33,27 +41,40 @@ public class ProductDaoJDBC implements ProductDao {
             preparedStatement.setString(4, product.getDescription());
             preparedStatement.setInt(5, product.getProductCategory().getId());
             preparedStatement.setInt(6, product.getSupplier().getId());
-            preparedStatement.executeQuery();
-            con.commit();
-
-        }catch(SQLException e){
-            System.out.println(e.getMessage());
-        }
+            preparedStatement.executeUpdate();
     }
 
     @Override
-    public Product find(int id) {
-        return null;
+    public Product find(int id) throws SQLException {
+        String findProductQuery = "SELECT * FROM product WHERE id =?";
+
+            preparedStatement = con.prepareStatement(findProductQuery);
+            preparedStatement.setInt(1, id);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            return getProduct(id, resultSet);
     }
 
     @Override
-    public void remove(int id) {
+    public void remove(int id) throws SQLException {
+        String removeProductQuery = "DELETE FROM product WHERE id =?";
+
+            preparedStatement = con.prepareStatement(removeProductQuery);
+            preparedStatement.setInt(1, id);
+            preparedStatement.executeUpdate();
 
     }
 
     @Override
-    public List<Product> getAll() {
-        return null;
+    public List<Product> getAll() throws SQLException {
+        String getAllProductsQuery = "SELECT * FROM products";
+
+            preparedStatement = con.prepareStatement(getAllProductsQuery);
+            ResultSet allProducts = preparedStatement.executeQuery();
+            List <Product> productList = new ArrayList<Product>();
+            while (allProducts.next()) {
+                productList.add(getProduct(allProducts.getInt("id"), allProducts));
+            }
+            return productList;
     }
 
     @Override
@@ -64,5 +85,17 @@ public class ProductDaoJDBC implements ProductDao {
     @Override
     public List<Product> getBy(ProductCategory productCategory) {
         return null;
+    }
+
+    private Product getProduct(int productId, ResultSet resultSet) throws SQLException {
+        Product resultProduct = new Product(resultSet.getString("name"),
+                resultSet.getFloat("price"),
+                resultSet.getString("currency"),
+                resultSet.getString("description"),
+                categoriesDB.find(resultSet.getInt("category_id")),
+                suppliersDB.find(resultSet.getInt("supplier_id")));
+        resultProduct.setId(productId);
+
+        return resultProduct;
     }
 }
