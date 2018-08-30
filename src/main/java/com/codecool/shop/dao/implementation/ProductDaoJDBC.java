@@ -51,7 +51,21 @@ public class ProductDaoJDBC implements ProductDao {
             preparedStatement = con.prepareStatement(findProductQuery);
             preparedStatement.setInt(1, id);
             ResultSet resultSet = preparedStatement.executeQuery();
+        if (resultSet.next()) {
             return getProduct(id, resultSet);
+        } return null;
+    }
+
+    @Override
+    public Product findByName(String name) throws SQLException {
+        String findProductQuery = "SELECT * FROM product WHERE name = ?";
+
+            preparedStatement = con.prepareStatement(findProductQuery);
+            preparedStatement.setString(1, name);
+            ResultSet resultSet = preparedStatement.executeQuery();
+        if (resultSet.next()) {
+            return getProduct(resultSet);
+        } return null;
     }
 
     @Override
@@ -66,20 +80,20 @@ public class ProductDaoJDBC implements ProductDao {
 
     @Override
     public List<Product> getAll() throws SQLException {
-        String getAllProductsQuery = "SELECT * FROM products";
+        String getAllProductsQuery = "SELECT * FROM product";
 
             preparedStatement = con.prepareStatement(getAllProductsQuery);
             ResultSet allProducts = preparedStatement.executeQuery();
             List <Product> productList = new ArrayList<Product>();
             while (allProducts.next()) {
-                productList.add(getProduct(allProducts.getInt("id"), allProducts));
+                productList.add(getProduct(allProducts));
             }
             return productList;
     }
 
     @Override
     public List<Product> getBy(Supplier supplier) throws SQLException {
-        String getProductsBySupplierQuery = "SELECT * FROM products WHERE supplier_id = ?";
+        String getProductsBySupplierQuery = "SELECT * FROM product WHERE supplier_id = ?";
 
             preparedStatement = con.prepareStatement(getProductsBySupplierQuery);
             preparedStatement.setInt(1, supplier.getId());
@@ -93,7 +107,7 @@ public class ProductDaoJDBC implements ProductDao {
 
     @Override
     public List<Product> getBy(ProductCategory productCategory) throws SQLException {
-        String getProductsByCategoryQuery = "SELECT * FROM products WHERE category_id = ?";
+        String getProductsByCategoryQuery = "SELECT * FROM product WHERE category_id = ?";
 
             preparedStatement = con.prepareStatement(getProductsByCategoryQuery);
             preparedStatement.setInt(1, productCategory.getId());
@@ -103,6 +117,18 @@ public class ProductDaoJDBC implements ProductDao {
                 productList.add(getProduct(allProducts.getInt("id"), allProducts));
             }
             return productList;
+    }
+
+    public int getLastId() throws SQLException {
+        String findProductIdQuery = "SELECT id FROM product WHERE id = (SELECT max(id) FROM product)";
+
+        preparedStatement = con.prepareStatement(findProductIdQuery);
+        ResultSet resultSet = preparedStatement.executeQuery();
+        int lastId = 0;
+        if (resultSet.next()) {
+            lastId = resultSet.getInt("id");
+            return lastId;
+        } return lastId;
     }
 
     private Product getProduct(int productId, ResultSet resultSet) throws SQLException {
@@ -115,5 +141,29 @@ public class ProductDaoJDBC implements ProductDao {
         resultProduct.setId(productId);
 
         return resultProduct;
+    }
+
+    private Product getProduct(ResultSet resultSet) throws SQLException {
+        Product resultProduct = new Product(resultSet.getString("name"),
+                resultSet.getFloat("price"),
+                resultSet.getString("currency"),
+                resultSet.getString("description"),
+                categoriesDB.find(resultSet.getInt("category_id")),
+                suppliersDB.find(resultSet.getInt("supplier_id")));
+        resultProduct.setId(resultSet.getInt("id"));
+
+        return resultProduct;
+    }
+
+    public void deleteDataFromTable(){
+        String removeProductQuery = "DELETE * FROM product";
+
+        try {
+            preparedStatement = con.prepareStatement(removeProductQuery);
+            preparedStatement.executeUpdate();
+            con.commit();
+        }catch(SQLException e){
+            System.out.println(e.getMessage());
+        }
     }
 }

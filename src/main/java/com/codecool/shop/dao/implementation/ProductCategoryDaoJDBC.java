@@ -61,6 +61,20 @@ public class ProductCategoryDaoJDBC implements ProductCategoryDao {
     }
 
     @Override
+    public ProductCategory findByName(String name) throws SQLException {
+        String findCategoryQuery = "SELECT * FROM category WHERE name = ?";
+
+        preparedStatement = con.prepareStatement(findCategoryQuery);
+        preparedStatement.setString(1, name);
+        ResultSet resultSet = preparedStatement.executeQuery();
+        if (resultSet.next()) {
+            ProductCategory category = new ProductCategory(resultSet.getString("name"), resultSet.getString("description"), resultSet.getString("department"));
+            category.setId(resultSet.getInt("id"));
+            return category;
+        } return null;
+    }
+
+    @Override
     public void remove(int id) {
         String removeCategoryQuery = "DELETE FROM category WHERE id = ?";
         try {
@@ -100,5 +114,18 @@ public class ProductCategoryDaoJDBC implements ProductCategoryDao {
             allCategory.add(category);
         }
         return allCategory;
+    }
+
+    public void deleteDataFromTable(){
+
+        String removeCategoryQuery = "DELETE * FROM category";
+
+        try {
+            preparedStatement = con.prepareStatement(removeCategoryQuery);
+            preparedStatement.executeUpdate();
+            con.commit();
+        }catch(SQLException e){
+            System.out.println(e.getMessage());
+        }
     }
 }

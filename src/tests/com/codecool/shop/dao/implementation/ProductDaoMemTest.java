@@ -16,54 +16,74 @@ import static org.junit.jupiter.api.Assertions.*;
 class ProductDaoMemTest {
 
     ProductDaoJDBC testProductDao = ProductDaoJDBC.getInstance();
-    Supplier testSupplier = new Supplier("Test", "Testsupplier");
+    ProductCategoryDaoJDBC testProductCategory = ProductCategoryDaoJDBC.getInstance();
+    SupplierDaoJDBC testSupplierJDBC = SupplierDaoJDBC.getInstance();
+
     ProductCategory testCategory = new ProductCategory("Testcategory", "Testdepartment", "Testdescr");
-    Product testProduct = new Product("Test Product", 100, "USD", "Testing", testCategory, testSupplier);
+    Supplier testSupplier = new Supplier("Test", "Testsupplier");
+    Product testProduct = new Product("Test Product", 100, "USD", "Testing", testProductCategory.find(testProductCategory.getLastId()), testSupplierJDBC.find(testSupplierJDBC.getLastId()));
+    Product testProduct2 = new Product("Test Product 2", 100, "USD", "Testing", testProductCategory.find(testProductCategory.getLastId()), testSupplierJDBC.find(testSupplierJDBC.getLastId()));
 
     ProductDaoMemTest() throws SQLException {
     }
 
     @BeforeEach
-    public void init(){
+    public void init() throws SQLException {
+        //testProductCategory.add(testCategory);
+        //testSupplierJDBC.add(testSupplier);
         testProductDao.add(testProduct);
-        System.out.println(testProduct.getId());
     }
 
     @Test
-    public void testAddProduct() {
-        assertEquals(1, testProductDao.getAll().size());
-        assertEquals(testProduct, testProductDao.getAll().get(0));
+    public void testAddProduct() throws SQLException {
+        int lastSize = testProductDao.getAll().size();
+        testProductDao.add(testProduct2);
+        assertEquals(lastSize + 1, testProductDao.getAll().size());
+        assertEquals(testProduct2.getName(), testProductDao.getAll().get(lastSize).getName());
+        int productLastId = testProductDao.getLastId();
+        testProductDao.remove(productLastId);
+
     }
 
     @Test
-    public void testFind() {
-        Product testing = testProductDao.find(1);
-        assertEquals(testProduct, testing);
+    public void testFind() throws SQLException {
+        int productLastId = testProductDao.getLastId();
+        Product testing = testProductDao.find(productLastId);
+        assertEquals(testProduct.getName(), testing.getName());
+        assertEquals(testProduct.getDescription(), testing.getDescription());
     }
 
     @Test
-    public void testNotFound() {
+    public void testNotFound() throws SQLException {
         Product testing = testProductDao.find(2);
         assertEquals(null, testing);
     }
 
     @Test
-    public void testRemove() {
-        testProductDao.remove(1);
-        assertEquals(0, testProductDao.getAll().size());
+    public void testRemove() throws SQLException {
+        int lastSize = testProductDao.getAll().size();
+        int productLastId = testProductDao.getLastId();
+        testProductDao.remove(productLastId);
+        assertEquals(lastSize - 1, testProductDao.getAll().size());
     }
 
     @Test
-    public void testGetAll() {
+    public void testGetAll() throws SQLException {
         List<Product> expected = new ArrayList<>();
         expected.add(testProduct);
-        assertEquals(expected.get(0).getName(), testProductDao.getAll().get(0).getName());
-        assertEquals(expected.size(), testProductDao.getAll().size());
+        int productLast = testProductDao.getAll().size();
+        System.out.println(testProductDao.getAll().get(0).getId());
+        assertEquals(expected.get(0).getName(), testProductDao.getAll().get(productLast-1).getName());
     }
 
     @AfterEach
-    public void destroy(){
-        testProductDao.remove(1);
+    public void destroy() throws SQLException {
+        int productLastId = testProductDao.getLastId();
+        //int supplierLastId = testSupplierJDBC.getLastId();
+        //int categoryLastId = testProductCategory.getLastId();
+        testProductDao.remove(productLastId);
+        //testSupplierJDBC.remove(supplierLastId);
+        //testProductCategory.remove(categoryLastId);
     }
 
 }

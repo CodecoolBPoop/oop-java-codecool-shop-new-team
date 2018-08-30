@@ -31,7 +31,7 @@ public class SupplierDaoJDBC implements SupplierDao {
 
     @Override
     public void add(Supplier supplier) {
-        String addSupplierQuery = "INSERT INTO supplier (name,  description) " +
+        String addSupplierQuery = "INSERT INTO supplier (name,  description)" +
                 "VALUES (?,?);";
 
         try {
@@ -45,7 +45,7 @@ public class SupplierDaoJDBC implements SupplierDao {
         }
     }
 
-    /*private void setId(Supplier supplier) throws SQLException {
+    private void setId(Supplier supplier) throws SQLException {
         String findSupplierIdQuery = "SELECT id FROM supplier WHERE name = ?";
         preparedStatement = con.prepareStatement(findSupplierIdQuery);
         preparedStatement.setString(1, supplier.getName());
@@ -55,7 +55,7 @@ public class SupplierDaoJDBC implements SupplierDao {
         ResultSet resultSet = preparedStatement.executeQuery();
         System.out.println("the id:" + resultSet.getString("id"));
         supplier.setId(resultSet.getInt("id"));
-    }*/
+    }
 
     public int getLastId() throws SQLException {
         String findSupplierIdQuery = "SELECT id FROM supplier WHERE id = (SELECT max(id) FROM supplier)";
@@ -84,9 +84,22 @@ public class SupplierDaoJDBC implements SupplierDao {
     }
 
     @Override
+    public Supplier findByName(String name) throws SQLException {
+        String findSupplierQuery = "SELECT * FROM supplier WHERE name = ?";
+
+        preparedStatement = con.prepareStatement(findSupplierQuery);
+        preparedStatement.setString(1, name);
+        ResultSet resultSet = preparedStatement.executeQuery();
+        if (resultSet.next()) {
+            Supplier supplier = new Supplier(resultSet.getString("name"), resultSet.getString("description"));
+            supplier.setId(resultSet.getInt("id"));
+            return supplier;
+        } return null;
+    }
+
+    @Override
     public void remove(int id) {
         String removeSupplierQuery = "DELETE FROM supplier WHERE id = ?";
-
         try {
             preparedStatement = con.prepareStatement(removeSupplierQuery);
             preparedStatement.setInt(1, id);
@@ -95,7 +108,6 @@ public class SupplierDaoJDBC implements SupplierDao {
         }catch(SQLException e){
             System.out.println(e.getMessage());
         }
-
     }
 
     @Override
@@ -113,5 +125,17 @@ public class SupplierDaoJDBC implements SupplierDao {
             allSupplier.add(supplier);
         }
         return allSupplier;
+    }
+
+    public void deleteDataFromTable(){
+        String removeSupplierQuery = "DELETE * FROM supplier";
+        try {
+            preparedStatement = con.prepareStatement(removeSupplierQuery);
+            preparedStatement.executeUpdate();
+            con.commit();
+
+        }catch(SQLException e){
+            System.out.println(e.getMessage());
+        }
     }
 }
