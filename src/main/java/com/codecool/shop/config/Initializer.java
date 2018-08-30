@@ -25,7 +25,7 @@ public class Initializer implements ServletContextListener {
 
 
         ProductDaoJDBC productDataStore = null;
-        ProductCategoryDao productCategoryDataStore = null;
+        ProductCategoryDaoJDBC productCategoryDataStore = null;
         SupplierDaoJDBC supplierDataStore = null;
         try {
             productDataStore = ProductDaoJDBC.getInstance();
@@ -35,12 +35,15 @@ public class Initializer implements ServletContextListener {
             e.printStackTrace();
         }
 
-        assert productDataStore != null;
         productDataStore.deleteDataFromTable();
-        assert supplierDataStore != null;
+        productDataStore.resetId();
+        productDataStore.startId();
         supplierDataStore.deleteDataFromTable();
-        assert productCategoryDataStore != null;
-        ((ProductCategoryDaoJDBC) productCategoryDataStore).deleteDataFromTable();
+        supplierDataStore.resetId();
+        supplierDataStore.startId();
+        productCategoryDataStore.deleteDataFromTable();
+        productCategoryDataStore.resetId();
+        productCategoryDataStore.startId();
 
         //setting up a new supplier
         Supplier amazon = null;
