@@ -15,6 +15,7 @@ class SupplierDaoMemTest {
 
     SupplierDaoJDBC testSupplierDao = SupplierDaoJDBC.getInstance();
     Supplier testSupplier = new Supplier("TestSupplier", "Testing");
+    Supplier testSupplier2 = new Supplier("TestSupplier2", "Testing");
 
     SupplierDaoMemTest() throws SQLException {
     }
@@ -28,7 +29,7 @@ class SupplierDaoMemTest {
     public void testAddOneSupplier() throws SQLException {
         int lastSupplier = testSupplierDao.getAll().size();
         int currentSize = testSupplierDao.getAll().size();
-        testSupplierDao.add(testSupplier);
+        testSupplierDao.add(testSupplier2);
         assertEquals(currentSize + 1, testSupplierDao.getAll().size());
         assertEquals(testSupplier.getName(), testSupplierDao.getAll().get(lastSupplier-1).getName());
         assertEquals(testSupplier.getDescription(), testSupplierDao.getAll().get(lastSupplier-1).getDescription());
@@ -52,17 +53,18 @@ class SupplierDaoMemTest {
 
     @Test
     public void testRemove() throws SQLException {
+        int lastSupplierSize = testSupplierDao.getAll().size();
         int id = testSupplierDao.getLastId();
         testSupplierDao.remove(id);
-        assertEquals(0, testSupplierDao.getAll().size());
+        assertEquals(lastSupplierSize - 1, testSupplierDao.getAll().size());
     }
 
     @Test
     public void testGetAll() throws SQLException {
         List<Supplier> expected = new ArrayList<>();
         expected.add(testSupplier);
-        assertEquals(expected.get(0).getName(), testSupplierDao.getAll().get(0).getName());
-        assertEquals(expected.size(), testSupplierDao.getAll().size());
+        int lastSupplier = testSupplierDao.getAll().size() - 1;
+        assertEquals(expected.get(0).getName(), testSupplierDao.getAll().get(lastSupplier).getName());
     }
 
     @AfterEach

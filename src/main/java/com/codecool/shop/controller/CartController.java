@@ -13,6 +13,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.sql.SQLException;
 
 @WebServlet(urlPatterns = {"/cart"})
 public class CartController extends HttpServlet {
@@ -38,7 +39,11 @@ public class CartController extends HttpServlet {
         String cartItemToAdd = req.getParameter("plus");
         if (cartItemToAdd != null) {
             Integer cartProductIdInt = Integer.parseInt(cartItemToAdd);
-            cartItems.add(cartProductIdInt);
+            try {
+                cartItems.add(cartProductIdInt);
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
             context.setVariable("totalPrice", OrderItem.getTotalPrice());
             context.setVariable("cartSize", OrderItem.totalItems);
         }

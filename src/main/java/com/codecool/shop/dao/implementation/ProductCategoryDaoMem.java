@@ -4,6 +4,7 @@ package com.codecool.shop.dao.implementation;
 import com.codecool.shop.dao.ProductCategoryDao;
 import com.codecool.shop.model.ProductCategory;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,6 +34,11 @@ public class ProductCategoryDaoMem implements ProductCategoryDao {
     @Override
     public ProductCategory find(int id) {
         return data.stream().filter(t -> t.getId() == id).findFirst().orElse(null);
+    }
+
+    @Override
+    public ProductCategory findByName(String name) throws SQLException {
+        return null;
     }
 
     @Override

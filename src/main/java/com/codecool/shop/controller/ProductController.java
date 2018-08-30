@@ -22,14 +22,16 @@ public class ProductController extends HttpServlet {
     private boolean categoryButton;
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        ProductDao productDataStore = ProductDaoMem.getInstance();
+
         CartItems cartItems = CartItems.getInstance();
 
+        ProductDaoJDBC productDataStore = null;
         ProductCategoryDaoJDBC productCategoryDataStore = null;
         SupplierDaoJDBC supplierDaoMem = null;
         try {
             productCategoryDataStore = ProductCategoryDaoJDBC.getInstance();
             supplierDaoMem = SupplierDaoJDBC.getInstance();
+            productDataStore = ProductDaoJDBC.getInstance();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -54,7 +56,11 @@ public class ProductController extends HttpServlet {
         String cartProductId = req.getParameter("cart_item_id");
         if (cartProductId != null) {
             Integer cartProductIdInt = Integer.parseInt(cartProductId);
-            cartItems.add(cartProductIdInt);
+            try {
+                cartItems.add(cartProductIdInt);
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
         //Map params = new HashMap<>();
         //params.put("category", productCategoryDataStore.find(1));
@@ -67,20 +73,13 @@ public class ProductController extends HttpServlet {
         context.setVariable("recipient", "World");
         try {
             context.setVariable("category", productCategoryDataStore.find(parsedId));
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        try {
             context.setVariable("categories", productCategoryDataStore.getAll());
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        try {
             context.setVariable("supplier", supplierDaoMem.getAll());
+            context.setVariable("products", productDataStore.getAll());
+            System.out.println("The Products: " + productDataStore.getAll());
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        context.setVariable("products", productDataStore.getAll());
         if (categoryButton ==true) {
             try {
                 context.setVariable("products", productDataStore.getBy(productCategoryDataStore.find(parsedId)));

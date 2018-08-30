@@ -9,6 +9,9 @@ public interface ProductCategoryDao {
 
     void add(ProductCategory category);
     ProductCategory find(int id) throws SQLException;
+
+    ProductCategory findByName(String name) throws SQLException;
+
     void remove(int id);
 
     List<ProductCategory> getAll() throws SQLException;
