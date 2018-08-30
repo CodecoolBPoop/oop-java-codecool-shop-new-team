@@ -31,7 +31,7 @@ public class ProductDaoJDBC implements ProductDao {
 
     @Override
     public void add(Product product) throws SQLException {
-        String addProductQuery = "INSERT INTO product (name, price, currency, description, category_id, supplier_id) " +
+        String addProductQuery = "INSERT INTO product (name, price, currency, description, category_id, supplier_id)" +
                 "VALUES (?,?,?,?,?,?);";
 
             preparedStatement = con.prepareStatement(addProductQuery);
@@ -46,7 +46,7 @@ public class ProductDaoJDBC implements ProductDao {
 
     @Override
     public Product find(int id) throws SQLException {
-        String findProductQuery = "SELECT * FROM product WHERE id =?";
+        String findProductQuery = "SELECT * FROM product WHERE id =?;";
 
             preparedStatement = con.prepareStatement(findProductQuery);
             preparedStatement.setInt(1, id);
@@ -58,7 +58,7 @@ public class ProductDaoJDBC implements ProductDao {
 
     @Override
     public Product findByName(String name) throws SQLException {
-        String findProductQuery = "SELECT * FROM product WHERE name = ?";
+        String findProductQuery = "SELECT * FROM product WHERE name = ?;";
 
             preparedStatement = con.prepareStatement(findProductQuery);
             preparedStatement.setString(1, name);
@@ -70,7 +70,7 @@ public class ProductDaoJDBC implements ProductDao {
 
     @Override
     public void remove(int id) throws SQLException {
-        String removeProductQuery = "DELETE FROM product WHERE id =?";
+        String removeProductQuery = "DELETE FROM product WHERE id =?;";
 
             preparedStatement = con.prepareStatement(removeProductQuery);
             preparedStatement.setInt(1, id);
@@ -80,7 +80,7 @@ public class ProductDaoJDBC implements ProductDao {
 
     @Override
     public List<Product> getAll() throws SQLException {
-        String getAllProductsQuery = "SELECT * FROM product";
+        String getAllProductsQuery = "SELECT * FROM product ORDER BY id;";
 
             preparedStatement = con.prepareStatement(getAllProductsQuery);
             ResultSet allProducts = preparedStatement.executeQuery();
@@ -93,7 +93,7 @@ public class ProductDaoJDBC implements ProductDao {
 
     @Override
     public List<Product> getBy(Supplier supplier) throws SQLException {
-        String getProductsBySupplierQuery = "SELECT * FROM product WHERE supplier_id = ?";
+        String getProductsBySupplierQuery = "SELECT * FROM product WHERE supplier_id = ?;";
 
             preparedStatement = con.prepareStatement(getProductsBySupplierQuery);
             preparedStatement.setInt(1, supplier.getId());
@@ -107,7 +107,7 @@ public class ProductDaoJDBC implements ProductDao {
 
     @Override
     public List<Product> getBy(ProductCategory productCategory) throws SQLException {
-        String getProductsByCategoryQuery = "SELECT * FROM product WHERE category_id = ?";
+        String getProductsByCategoryQuery = "SELECT * FROM product WHERE category_id = ?;";
 
             preparedStatement = con.prepareStatement(getProductsByCategoryQuery);
             preparedStatement.setInt(1, productCategory.getId());
@@ -120,7 +120,7 @@ public class ProductDaoJDBC implements ProductDao {
     }
 
     public int getLastId() throws SQLException {
-        String findProductIdQuery = "SELECT id FROM product WHERE id = (SELECT max(id) FROM product)";
+        String findProductIdQuery = "SELECT id FROM product WHERE id = (SELECT max(id) FROM product);";
 
         preparedStatement = con.prepareStatement(findProductIdQuery);
         ResultSet resultSet = preparedStatement.executeQuery();
@@ -156,12 +156,32 @@ public class ProductDaoJDBC implements ProductDao {
     }
 
     public void deleteDataFromTable(){
-        String removeProductQuery = "DELETE * FROM product";
+        String removeProductQuery = "DELETE FROM product;";
 
         try {
             preparedStatement = con.prepareStatement(removeProductQuery);
             preparedStatement.executeUpdate();
-            con.commit();
+        }catch(SQLException e){
+            System.out.println(e.getMessage());
+        }
+    }
+
+    public void resetId() {
+        String resetIdQuery = "ALTER SEQUENCE product_id_seq RESTART WITH 1;";
+        try {
+            preparedStatement = con.prepareStatement(resetIdQuery);
+            preparedStatement.executeUpdate();
+        }catch(SQLException e){
+            System.out.println(e.getMessage());
+        }
+    }
+
+    public void startId() {
+        String resetIdQuery =
+                "UPDATE product SET id=nextval('product_id_seq');";
+        try {
+            preparedStatement = con.prepareStatement(resetIdQuery);
+            preparedStatement.executeUpdate();
         }catch(SQLException e){
             System.out.println(e.getMessage());
         }

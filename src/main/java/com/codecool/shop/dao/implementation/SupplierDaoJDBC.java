@@ -112,7 +112,7 @@ public class SupplierDaoJDBC implements SupplierDao {
 
     @Override
     public List<Supplier> getAll() throws SQLException {
-        String findSupplierQuery = "SELECT * FROM supplier";
+        String findSupplierQuery = "SELECT * FROM supplier ORDER BY id";
 
         preparedStatement = con.prepareStatement(findSupplierQuery);
         ResultSet resultSet = preparedStatement.executeQuery();
@@ -128,12 +128,32 @@ public class SupplierDaoJDBC implements SupplierDao {
     }
 
     public void deleteDataFromTable(){
-        String removeSupplierQuery = "DELETE * FROM supplier";
+        String removeSupplierQuery = "DELETE FROM supplier";
         try {
             preparedStatement = con.prepareStatement(removeSupplierQuery);
             preparedStatement.executeUpdate();
-            con.commit();
 
+        }catch(SQLException e){
+            System.out.println(e.getMessage());
+        }
+    }
+
+    public void resetId() {
+        String resetIdQuery = "ALTER SEQUENCE supplier_id_seq RESTART WITH 1;";
+        try {
+            preparedStatement = con.prepareStatement(resetIdQuery);
+            preparedStatement.executeUpdate();
+        }catch(SQLException e){
+            System.out.println(e.getMessage());
+        }
+    }
+
+    public void startId() {
+        String resetIdQuery =
+                "UPDATE category SET id=nextval('supplier_id_seq');";
+        try {
+            preparedStatement = con.prepareStatement(resetIdQuery);
+            preparedStatement.executeUpdate();
         }catch(SQLException e){
             System.out.println(e.getMessage());
         }
