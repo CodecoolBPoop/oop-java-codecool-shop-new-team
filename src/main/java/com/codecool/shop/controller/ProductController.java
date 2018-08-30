@@ -67,16 +67,12 @@ public class ProductController extends HttpServlet {
         context.setVariable("recipient", "World");
         try {
             context.setVariable("category", productCategoryDataStore.find(parsedId));
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        try {
             context.setVariable("categories", productCategoryDataStore.getAll());
+            context.setVariable("supplier", supplierDaoMem.getAll());
         } catch (SQLException e) {
             e.printStackTrace();
         }
         try {
-            context.setVariable("supplier", supplierDaoMem.getAll());
         } catch (SQLException e) {
             e.printStackTrace();
         }

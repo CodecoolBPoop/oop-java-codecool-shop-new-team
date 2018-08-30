@@ -14,6 +14,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.Map;
 
 
@@ -32,7 +33,11 @@ public class Confirmation extends HttpServlet {
         WebContext context = new WebContext(request, response, request.getServletContext());
 
         Map <String, String[]> persDetails = checkoutDaoMap.getAll();
-        context.setVariable("cartItems", cartData.getAll());
+        try {
+            context.setVariable("cartItems", cartData.getAll());
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
         context.setVariable("firstname", persDetails.get("firstname")[0]);
         context.setVariable("lastname", persDetails.get("lastname")[0]);
         context.setVariable("email", persDetails.get("email")[0]);
