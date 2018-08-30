@@ -101,7 +101,7 @@ public class ProductCategoryDaoJDBC implements ProductCategoryDao {
 
     @Override
     public List<ProductCategory> getAll() throws SQLException {
-        String findCategoryQuery = "SELECT * FROM category";
+        String findCategoryQuery = "SELECT * FROM category ORDER BY id;";
 
         preparedStatement = con.prepareStatement(findCategoryQuery);
         ResultSet resultSet = preparedStatement.executeQuery();
@@ -118,14 +118,35 @@ public class ProductCategoryDaoJDBC implements ProductCategoryDao {
 
     public void deleteDataFromTable(){
 
-        String removeCategoryQuery = "DELETE * FROM category";
+        String removeCategoryQuery = "DELETE FROM category";
 
         try {
             preparedStatement = con.prepareStatement(removeCategoryQuery);
             preparedStatement.executeUpdate();
-            con.commit();
         }catch(SQLException e){
             System.out.println(e.getMessage());
         }
     }
+
+    public void resetId() {
+        String resetIdQuery = "ALTER SEQUENCE category_id_seq RESTART WITH 1;";
+        try {
+            preparedStatement = con.prepareStatement(resetIdQuery);
+            preparedStatement.executeUpdate();
+        }catch(SQLException e){
+            System.out.println(e.getMessage());
+        }
+    }
+
+    public void startId() {
+        String resetIdQuery =
+                "UPDATE category SET id=nextval('category_id_seq');";
+        try {
+            preparedStatement = con.prepareStatement(resetIdQuery);
+            preparedStatement.executeUpdate();
+        }catch(SQLException e){
+            System.out.println(e.getMessage());
+        }
+    }
+
 }

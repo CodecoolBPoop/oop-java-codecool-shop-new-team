@@ -27,7 +27,7 @@ public class CartItems implements CartDao {
 
     @Override
     public void add(int id) throws SQLException {
-        ProductDao productDataStore = ProductDaoMem.getInstance();
+        ProductDaoJDBC productDataStore = ProductDaoJDBC.getInstance();
         Product product = productDataStore.find(id);
         if (findBoolean(id)) {
             OrderItem item = find(id);

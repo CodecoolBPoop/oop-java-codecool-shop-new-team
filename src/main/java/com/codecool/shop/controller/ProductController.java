@@ -76,7 +76,6 @@ public class ProductController extends HttpServlet {
             context.setVariable("categories", productCategoryDataStore.getAll());
             context.setVariable("supplier", supplierDaoMem.getAll());
             context.setVariable("products", productDataStore.getAll());
-            System.out.println("The Products: " + productDataStore.getAll());
         } catch (SQLException e) {
             e.printStackTrace();
         }
