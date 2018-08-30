@@ -5,6 +5,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,8 +13,11 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class ProductCategoryDaoMemTest {
 
-    ProductCategoryDaoMem testCategoryDao = ProductCategoryDaoMem.getInstance();
+    ProductCategoryDaoJDBC testCategoryDao = ProductCategoryDaoJDBC.getInstance();
     ProductCategory testCategory = new ProductCategory("Phones", "Telecommunication", "Nice phone");
+
+    ProductCategoryDaoMemTest() throws SQLException {
+    }
 
     @BeforeEach
     void setUp() {
@@ -21,33 +25,48 @@ class ProductCategoryDaoMemTest {
     }
 
     @Test
-    public void testAdd() {
-        assertEquals(1, testCategoryDao.getAll().size());
+    public void testAdd() throws SQLException {
+        int lastSupplier = testCategoryDao.getAll().size();
+        int currentSize = testCategoryDao.getAll().size();
+        testCategoryDao.add(testCategory);
+        assertEquals(currentSize + 1, testCategoryDao.getAll().size());
+        assertEquals(testCategory.getName(), testCategoryDao.getAll().get(lastSupplier-1).getName());
+        assertEquals(testCategory.getDescription(), testCategoryDao.getAll().get(lastSupplier-1).getDescription());
+        int id = testCategoryDao.getLastId();
+        testCategoryDao.remove(id);
     }
 
     @Test
-    public void testFind() {
-        assertEquals(testCategory, testCategoryDao.find(1));
+    public void testFind() throws SQLException {
+        int lastId = testCategoryDao.getLastId();
+        int lastCategory = testCategoryDao.getAll().size();
+        ProductCategory latestCategory = testCategoryDao.getAll().get(lastCategory-1);
+        assertEquals(latestCategory.getId(), testCategoryDao.find(lastId).getId());
     }
 
     @Test
-    public void testRemove() {
-        testCategoryDao.remove(1);
-        assertEquals(0, testCategoryDao.getAll().size());
+    public void testRemove() throws SQLException {
+        testCategoryDao.add(testCategory);
+        int currentSize = testCategoryDao.getAll().size();
+        int lastId = testCategoryDao.getLastId();
+        testCategoryDao.remove(lastId);
+        assertEquals(currentSize - 1, testCategoryDao.getAll().size());
     }
 
     @Test
-    public void testGetAll() {
-        assertEquals(testCategory.getName(), testCategoryDao.getAll().get(0).getName());
-        assertEquals(testCategory.getDepartment(), testCategoryDao.getAll().get(0).getDepartment());
-        assertEquals(testCategory.getDescription(), testCategoryDao.getAll().get(0).getDescription());
+    public void testGetAll() throws SQLException {
+        int lastCategory = testCategoryDao.getAll().size() - 1;
+        assertEquals(testCategory.getName(), testCategoryDao.getAll().get(lastCategory).getName());
+        assertEquals(testCategory.getDepartment(), testCategoryDao.getAll().get(lastCategory).getDepartment());
+        assertEquals(testCategory.getDescription(), testCategoryDao.getAll().get(lastCategory).getDescription());
 
     }
 
     @AfterEach
-    void tearDown() {
+    void tearDown() throws SQLException {
         if (testCategoryDao.getAll().size() != 0) {
-            testCategoryDao.remove(1);
+            int id = testCategoryDao.getLastId();
+            testCategoryDao.remove(id);
         }
     }
 }
