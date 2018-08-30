@@ -11,6 +11,9 @@ public interface ProductDao {
 
     void add(Product product) throws SQLException;
     Product find(int id) throws SQLException;
+
+    Product findByName(String name) throws SQLException;
+
     void remove(int id) throws SQLException;
 
     List<Product> getAll() throws SQLException;

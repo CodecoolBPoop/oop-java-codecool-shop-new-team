@@ -15,6 +15,7 @@ class ProductCategoryDaoMemTest {
 
     ProductCategoryDaoJDBC testCategoryDao = ProductCategoryDaoJDBC.getInstance();
     ProductCategory testCategory = new ProductCategory("Phones", "Telecommunication", "Nice phone");
+    ProductCategory testCategory2 = new ProductCategory("Phones 2", "Telecommunication", "Nice phone");
 
     ProductCategoryDaoMemTest() throws SQLException {
     }
@@ -26,12 +27,12 @@ class ProductCategoryDaoMemTest {
 
     @Test
     public void testAdd() throws SQLException {
-        int lastSupplier = testCategoryDao.getAll().size();
+        int lastCategory = testCategoryDao.getAll().size() - 1;
         int currentSize = testCategoryDao.getAll().size();
-        testCategoryDao.add(testCategory);
+        testCategoryDao.add(testCategory2);
         assertEquals(currentSize + 1, testCategoryDao.getAll().size());
-        assertEquals(testCategory.getName(), testCategoryDao.getAll().get(lastSupplier-1).getName());
-        assertEquals(testCategory.getDescription(), testCategoryDao.getAll().get(lastSupplier-1).getDescription());
+        assertEquals(testCategory.getName(), testCategoryDao.getAll().get(lastCategory).getName());
+        assertEquals(testCategory.getDescription(), testCategoryDao.getAll().get(lastCategory).getDescription());
         int id = testCategoryDao.getLastId();
         testCategoryDao.remove(id);
     }
@@ -46,7 +47,7 @@ class ProductCategoryDaoMemTest {
 
     @Test
     public void testRemove() throws SQLException {
-        testCategoryDao.add(testCategory);
+        testCategoryDao.add(testCategory2);
         int currentSize = testCategoryDao.getAll().size();
         int lastId = testCategoryDao.getLastId();
         testCategoryDao.remove(lastId);
