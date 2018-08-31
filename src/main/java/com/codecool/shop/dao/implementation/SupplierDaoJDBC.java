@@ -150,7 +150,7 @@ public class SupplierDaoJDBC implements SupplierDao {
 
     public void startId() {
         String resetIdQuery =
-                "UPDATE category SET id=nextval('supplier_id_seq');";
+                "UPDATE supplier SET id=nextval('supplier_id_seq');";
         try {
             preparedStatement = con.prepareStatement(resetIdQuery);
             preparedStatement.executeUpdate();

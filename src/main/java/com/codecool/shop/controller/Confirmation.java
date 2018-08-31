@@ -3,6 +3,7 @@ package com.codecool.shop.controller;
 import com.codecool.shop.config.TemplateEngineUtil;
 import com.codecool.shop.dao.CartDao;
 import com.codecool.shop.dao.implementation.CartItems;
+import com.codecool.shop.dao.implementation.CartItemsJDBC;
 import com.codecool.shop.dao.implementation.CheckoutDao;
 import com.codecool.shop.dao.implementation.FinalData;
 import org.thymeleaf.TemplateEngine;
@@ -14,6 +15,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.Map;
 
 
@@ -22,8 +24,11 @@ import java.util.Map;
 public class Confirmation extends HttpServlet {
 
     CheckoutDao checkoutDaoMap = CheckoutDao.getInstance();
-    CartDao cartData = CartItems.getInstance();
+    CartDao cartData = CartItemsJDBC.getInstance();
     FinalData finalData = FinalData.getInstance();
+
+    public Confirmation() throws SQLException {
+    }
 
     public void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -32,7 +37,11 @@ public class Confirmation extends HttpServlet {
         WebContext context = new WebContext(request, response, request.getServletContext());
 
         Map <String, String[]> persDetails = checkoutDaoMap.getAll();
-        context.setVariable("cartItems", cartData.getAll());
+        try {
+            context.setVariable("cartItems", cartData.getAll());
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
         context.setVariable("firstname", persDetails.get("firstname")[0]);
         context.setVariable("lastname", persDetails.get("lastname")[0]);
         context.setVariable("email", persDetails.get("email")[0]);

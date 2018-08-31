@@ -23,7 +23,12 @@ public class ProductController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
-        CartItems cartItems = CartItems.getInstance();
+        CartItemsJDBC cartItems = null;
+        try {
+            cartItems = CartItemsJDBC.getInstance();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
 
         ProductDaoJDBC productDataStore = null;
         ProductCategoryDaoJDBC productCategoryDataStore = null;

@@ -3,6 +3,7 @@ package com.codecool.shop.controller;
 import com.codecool.shop.config.TemplateEngineUtil;
 import com.codecool.shop.dao.CartDao;
 import com.codecool.shop.dao.implementation.CartItems;
+import com.codecool.shop.dao.implementation.CartItemsJDBC;
 import com.codecool.shop.model.OrderItem;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.WebContext;
@@ -19,19 +20,32 @@ import java.sql.SQLException;
 public class CartController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        CartDao cartData = CartItems.getInstance();
+        CartDao cartData = null;
+        try {
+            cartData = CartItemsJDBC.getInstance();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
 
         TemplateEngine engine = TemplateEngineUtil.getTemplateEngine(req.getServletContext());
         WebContext context = new WebContext(req, resp, req.getServletContext());
-        context.setVariable("cartItems", cartData.getAll());
+        try {
+            context.setVariable("cartItems", cartData.getAll());
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
         context.setVariable("cartSize", OrderItem.totalItems);
         context.setVariable("totalPrice", OrderItem.getTotalPrice());
 
-        CartItems cartItems = CartItems.getInstance();
+
         String cartItemToRemove = req.getParameter("minus");
         if (cartItemToRemove != null && OrderItem.totalItems != 0) {
             Integer cartProductIdInt = Integer.parseInt(cartItemToRemove);
-            cartItems.remove(cartProductIdInt);
+            try {
+                cartData.remove(cartProductIdInt);
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
             context.setVariable("totalPrice", OrderItem.getTotalPrice());
             context.setVariable("cartSize", OrderItem.totalItems);
         }
@@ -40,7 +54,7 @@ public class CartController extends HttpServlet {
         if (cartItemToAdd != null) {
             Integer cartProductIdInt = Integer.parseInt(cartItemToAdd);
             try {
-                cartItems.add(cartProductIdInt);
+                cartData.add(cartProductIdInt);
             } catch (SQLException e) {
                 e.printStackTrace();
             }
