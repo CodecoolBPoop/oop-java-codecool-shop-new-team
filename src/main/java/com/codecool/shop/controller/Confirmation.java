@@ -3,6 +3,7 @@ package com.codecool.shop.controller;
 import com.codecool.shop.config.TemplateEngineUtil;
 import com.codecool.shop.dao.CartDao;
 import com.codecool.shop.dao.implementation.CartItems;
+import com.codecool.shop.dao.implementation.CartItemsJDBC;
 import com.codecool.shop.dao.implementation.CheckoutDao;
 import com.codecool.shop.dao.implementation.FinalData;
 import org.thymeleaf.TemplateEngine;
@@ -23,8 +24,11 @@ import java.util.Map;
 public class Confirmation extends HttpServlet {
 
     CheckoutDao checkoutDaoMap = CheckoutDao.getInstance();
-    CartDao cartData = CartItems.getInstance();
+    CartDao cartData = CartItemsJDBC.getInstance();
     FinalData finalData = FinalData.getInstance();
+
+    public Confirmation() throws SQLException {
+    }
 
     public void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {

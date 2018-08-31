@@ -27,10 +27,13 @@ public class Initializer implements ServletContextListener {
         ProductDaoJDBC productDataStore = null;
         ProductCategoryDaoJDBC productCategoryDataStore = null;
         SupplierDaoJDBC supplierDataStore = null;
+        CartItemsJDBC cartDataStrore = null;
         try {
             productDataStore = ProductDaoJDBC.getInstance();
             supplierDataStore = SupplierDaoJDBC.getInstance();
             productCategoryDataStore = ProductCategoryDaoJDBC.getInstance();
+            cartDataStrore = CartItemsJDBC.getInstance();
+
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -44,6 +47,9 @@ public class Initializer implements ServletContextListener {
         productCategoryDataStore.deleteDataFromTable();
         productCategoryDataStore.resetId();
         productCategoryDataStore.startId();
+        cartDataStrore.deleteDataFromTable();
+        cartDataStrore.resetId();
+        cartDataStrore.startId();
 
         //setting up a new supplier
         Supplier amazon = null;

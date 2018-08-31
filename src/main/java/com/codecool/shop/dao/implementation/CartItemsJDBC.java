@@ -34,22 +34,15 @@ public class CartItemsJDBC implements CartDao {
     @Override
     public void add(int id) throws SQLException {
         Product productToAddCart = productDB.find(id);
-
-        String checkExistenceQuery = "SELECT (quantity, totalprice) FROM orderitem WHERE id =?";
+        String checkExistenceQuery = "SELECT * FROM orderitem WHERE id =?";
 
         preparedStatement = con.prepareStatement(checkExistenceQuery);
         preparedStatement.setInt(1, id);
         ResultSet resultOrderItem = preparedStatement.executeQuery();
 
-        if(resultOrderItem.next()) {
-            String updateOrderItemQuery = "UPDATE orderitem SET quantity = ?, total_price = ? WHERE id = ?";
-
-            preparedStatement = con.prepareStatement(updateOrderItemQuery);
-            preparedStatement.setInt(1, resultOrderItem.getInt("quantity") + 1);
-            preparedStatement.setFloat(2, resultOrderItem.getFloat("total_price") + productToAddCart.getDefaultPrice());
-            preparedStatement.setInt(3, id);
-            preparedStatement.executeUpdate();
-        }else{
+        if (resultOrderItem.next()) {
+            increaseQuantity(id, resultOrderItem);
+        } else {
             String createOrderItemQuery = "INSERT INTO orderitem (id, name, quantity, price, total_price, currency) VALUES (?,?,?,?,?,?)";
 
             preparedStatement = con.prepareStatement(createOrderItemQuery);
@@ -67,25 +60,28 @@ public class CartItemsJDBC implements CartDao {
     public void remove(int id) throws SQLException {
         Product productToRemoveFromCart = productDB.find(id);
 
-        String checkIfLastOneQuery = "SELECT (quantity, totalprice) FROM orderitem WHERE id =?";
+        String checkIfLastOneQuery = "SELECT * FROM orderitem WHERE id =?";
 
         preparedStatement = con.prepareStatement(checkIfLastOneQuery);
         preparedStatement.setInt(1, id);
         ResultSet resultOrderItem = preparedStatement.executeQuery();
 
-        if(resultOrderItem.getInt("quantity") != 1) {
-            String updateOrderItemQuery = "UPDATE orderitem SET quantity = ?, total_price = ? WHERE id = ?";
+        if (resultOrderItem.next()) {
+            if (resultOrderItem.getInt("quantity") != 1) {
+                String updateOrderItemQuery = "UPDATE orderitem SET quantity = ?, total_price = ? WHERE id = ?";
 
-            preparedStatement = con.prepareStatement(updateOrderItemQuery);
-            preparedStatement.setInt(1, resultOrderItem.getInt("quantity") - 1);
-            preparedStatement.setFloat(2, resultOrderItem.getFloat("total_price") - productToRemoveFromCart.getDefaultPrice());
-            preparedStatement.setInt(3, id);
-            preparedStatement.executeUpdate();
-        }else{
-            String deleteOrderItemQuery = "DELETE FROM orderitem WHERE id = ?";
+                preparedStatement = con.prepareStatement(updateOrderItemQuery);
+                preparedStatement.setInt(1, resultOrderItem.getInt("quantity") - 1);
+                preparedStatement.setFloat(2, resultOrderItem.getFloat("total_price") - productToRemoveFromCart.getDefaultPrice());
+                preparedStatement.setInt(3, id);
+                preparedStatement.executeUpdate();
+            } else {
+                String deleteOrderItemQuery = "DELETE FROM orderitem WHERE id = ?";
 
-            preparedStatement = con.prepareStatement(deleteOrderItemQuery);
-            preparedStatement.executeUpdate();
+                preparedStatement = con.prepareStatement(deleteOrderItemQuery);
+                preparedStatement.setInt(1, id);
+                preparedStatement.executeUpdate();
+            }
         }
     }
 
@@ -93,32 +89,111 @@ public class CartItemsJDBC implements CartDao {
     public OrderItem find(int id) throws SQLException {
         String findOrderItemQuery = "SELECT * FROM orderitem WHERE id =?";
 
-            preparedStatement = con.prepareStatement(findOrderItemQuery);
-            preparedStatement.setInt(1, id);
-            ResultSet resultSet = preparedStatement.executeQuery();
-            return getOrderItem(id, resultSet);
+        preparedStatement = con.prepareStatement(findOrderItemQuery);
+        preparedStatement.setInt(1, id);
+        ResultSet resultSet = preparedStatement.executeQuery();
+        return getOrderItem(resultSet);
     }
 
     @Override
     public List<OrderItem> getAll() throws SQLException {
-        String getAllOrderItemsQuery = "SELECT * FROM orderitems";
+        String getAllOrderItemsQuery = "SELECT * FROM orderitem";
 
-            preparedStatement = con.prepareStatement(getAllOrderItemsQuery);
-            ResultSet allOrderItems = preparedStatement.executeQuery();
-            List <OrderItem> orderItemList = new ArrayList<OrderItem>();
-            while (allOrderItems.next()) {
-                orderItemList.add(getOrderItem(allOrderItems.getInt("id"), allOrderItems));
-            }
-            return orderItemList;
+        preparedStatement = con.prepareStatement(getAllOrderItemsQuery);
+        ResultSet allOrderItems = preparedStatement.executeQuery();
+        List<OrderItem> orderItemList = new ArrayList<OrderItem>();
+        while (allOrderItems.next()) {
+            orderItemList.add(new OrderItem(allOrderItems.getInt("id"),
+                    allOrderItems.getString("name"),
+                    allOrderItems.getInt("quantity"),
+                    allOrderItems.getFloat("price"),
+                    Currency.getInstance(allOrderItems.getString("currency"))));
+        }
+        return orderItemList;
     }
 
-    private OrderItem getOrderItem(int OrderItemId, ResultSet resultSet) throws SQLException {
-        OrderItem resultOrderItem = new OrderItem(resultSet.getInt("id"),
-                resultSet.getString("name"),
-                resultSet.getInt("quantity"),
-                resultSet.getFloat("price"),
-                Currency.getInstance(resultSet.getString("curency")));
+    private OrderItem getOrderItem(ResultSet resultSet) throws SQLException {
 
-        return resultOrderItem;
+        if (resultSet.next()) {
+            return new OrderItem(resultSet.getInt("id"),
+                    resultSet.getString("name"),
+                    resultSet.getInt("quantity"),
+                    resultSet.getFloat("price"),
+                    Currency.getInstance(resultSet.getString("currency")));
+
+        }
+        return null;
+    }
+
+    public int getLastId() throws SQLException {
+        String findProductIdQuery = "SELECT id FROM orderitem WHERE id = (SELECT max(id) FROM orderitem)";
+
+        preparedStatement = con.prepareStatement(findProductIdQuery);
+        ResultSet resultSet = preparedStatement.executeQuery();
+        int lastId = 0;
+        if (resultSet.next()) {
+            lastId = resultSet.getInt("id");
+            return lastId;
+        }
+        return lastId;
+    }
+
+    private void increaseQuantity(int id, ResultSet resultOrderItem) throws SQLException {
+        Product productToAddCart = productDB.find(id);
+
+        String updateOrderItemQuery = "UPDATE orderitem SET quantity = ?, total_price = ? WHERE id = ?";
+        preparedStatement = con.prepareStatement(updateOrderItemQuery);
+        preparedStatement.setInt(1, resultOrderItem.getInt("quantity") + 1);
+        preparedStatement.setFloat(2, resultOrderItem.getFloat("total_price") + productToAddCart.getDefaultPrice());
+        preparedStatement.setInt(3, id);
+        preparedStatement.executeUpdate();
+    }
+
+    public OrderItem findByName(String name) throws SQLException {
+        String findProductQuery = "SELECT * FROM orderitem WHERE name = ?";
+
+        preparedStatement = con.prepareStatement(findProductQuery);
+        preparedStatement.setString(1, name);
+        ResultSet resultSet = preparedStatement.executeQuery();
+        if (resultSet.next()) {
+            return new OrderItem(resultSet.getInt("id"),
+                    resultSet.getString("name"),
+                    resultSet.getInt("quantity"),
+                    resultSet.getFloat("price"),
+                    Currency.getInstance(resultSet.getString("currency")));
+        }
+        return null;
+    }
+
+    public void deleteDataFromTable() {
+        String removeOrderQuery = "DELETE FROM orderitem";
+        try {
+            preparedStatement = con.prepareStatement(removeOrderQuery);
+            preparedStatement.executeUpdate();
+
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
+    public void resetId() {
+        String resetIdQuery = "ALTER SEQUENCE orderitem_id_seq RESTART WITH 1;";
+        try {
+            preparedStatement = con.prepareStatement(resetIdQuery);
+            preparedStatement.executeUpdate();
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
+    public void startId() {
+        String resetIdQuery =
+                "UPDATE orderitem SET id=nextval('orderitem_id_seq');";
+        try {
+            preparedStatement = con.prepareStatement(resetIdQuery);
+            preparedStatement.executeUpdate();
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
     }
 }

@@ -17,11 +17,12 @@ import static org.junit.jupiter.api.Assertions.*;
 class CartItemsTest {
 
     private CartItemsJDBC cartItemsTest = CartItemsJDBC.getInstance();
-    ProductDao productDataStoreTest = ProductDaoMem.getInstance();
+    ProductDao productDataStoreTest = ProductDaoJDBC.getInstance();
     Supplier testSupplier = new Supplier("Test", "Testsupplier");
     ProductCategory testCategory = new ProductCategory("Testcategory", "Testdepartment", "Testdescr");
     Product testProduct = new Product("TV", 100, "USD", "nice TV", testCategory, testSupplier);
     Product testProduct2 = new Product("DVD", 150, "USD", "nice DVD", testCategory, testSupplier);
+
 
     CartItemsTest() throws SQLException {
     }
@@ -29,37 +30,40 @@ class CartItemsTest {
     @BeforeEach
     public void init() throws SQLException {
     productDataStoreTest.add(testProduct);
-    cartItemsTest.add(1);
+    cartItemsTest.add(productDataStoreTest.findByName("TV").getId());
     }
 
     @Test
     public void testAddProductNotInCart() throws SQLException {
-        assertEquals(testProduct, productDataStoreTest.find(1));
+        Product resultProduct = productDataStoreTest.find(cartItemsTest.findByName("TV").getId());
+        assertEquals(testProduct.getName(), resultProduct.getName());
     }
 
     @Test
     public void testAddSameProductToCart() throws SQLException {
-        cartItemsTest.add(1);
-        OrderItem testOrderItem = cartItemsTest.find(1);
+        cartItemsTest.add(cartItemsTest.getLastId());
+        OrderItem testOrderItem = cartItemsTest.find(cartItemsTest.getLastId());
         assertEquals(2, testOrderItem.getQuantity());
         assertEquals("200", testOrderItem.getPrice());
-        cartItemsTest.remove(1);
+        cartItemsTest.remove(cartItemsTest.getLastId());
     }
 
     @Test
     public void testDecreaseProductFromCart() throws SQLException {
-        cartItemsTest.add(1);
-        cartItemsTest.remove(1);
-        OrderItem testOrderItem = cartItemsTest.find(1);
+        cartItemsTest.add(cartItemsTest.getLastId());
+        cartItemsTest.remove(cartItemsTest.getLastId());
+        OrderItem testOrderItem = cartItemsTest.find(cartItemsTest.getLastId());
         assertEquals(1, testOrderItem.getQuantity());
         assertEquals("100", testOrderItem.getPrice());
     }
 
     @Test
     public void testRemoveLastItemFromCart() throws SQLException {
-        cartItemsTest.remove(1);
-        assertEquals(0, cartItemsTest.getAll().size());
-        cartItemsTest.add(1);
+        int lastSize = cartItemsTest.getAll().size();
+        cartItemsTest.remove(cartItemsTest.getLastId());
+        assertEquals(0,  lastSize - 1);
+        cartItemsTest.add(productDataStoreTest.findByName("TV").getId());
+
     }
 
     @Test
@@ -67,14 +71,13 @@ class CartItemsTest {
         List<OrderItem> expected = new ArrayList<>();
         OrderItem testOrderItem = new OrderItem(1, "TV", 1, 100, Currency.getInstance("USD"));
         expected.add(testOrderItem);
-        assertEquals(expected.get(0).getName(), cartItemsTest.getAll().get(0).getName());
         assertEquals(expected.size(), cartItemsTest.getAll().size());
     }
 
     @AfterEach
     public void destroy() throws SQLException {
-        cartItemsTest.remove(1);
-        productDataStoreTest.remove(1);
+        cartItemsTest.remove(cartItemsTest.findByName("TV").getId());
+        productDataStoreTest.remove(productDataStoreTest.findByName("TV").getId());
     }
 
 
